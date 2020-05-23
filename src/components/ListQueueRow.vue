@@ -20,7 +20,13 @@
             :name="'Cantidad:'"
             :value="`${queue.users.length}/${queue.limit}`"
           ></form-display>
-          <form-display-buttons class="info-queue-display"></form-display-buttons>
+          <form-display-buttons
+            @clickGreenButton='goNexUser'
+            @clickRedButton='removeQueueOfUser'
+            :name-green-button="'Siguiente cliente'"
+            :name-red-button="'Eliminar'"
+            class="info-queue-display"
+          ></form-display-buttons>
         </div>
       </template>
     </sui-accordion-content>
@@ -30,6 +36,7 @@
 <script>
 import FormDisplay from '../elements/FormDisplayKV';
 import FormDisplayButtons from '../elements/FormDisplayButtons';
+import {mapActions} from 'vuex';
 export default {
   props: ['queue'],
   components: {
@@ -44,7 +51,14 @@ export default {
   methods: {
     clickOnAccordion() {
       this.isActive = !this.isActive;
-    }
+    },
+    goNexUser() {
+      console.log('Go next user');
+    },
+    async removeQueueOfUser() {
+      await this.removeQueue(this.queue);
+    },
+    ...mapActions(['removeQueue'])
   }
 };
 </script>

@@ -83,6 +83,13 @@ export default new Vuex.Store({
     },
     getImage: async function() {
       await queuesController.getImage();
+    },
+    removeQueue: async ({commit}, queue) => {
+      const queues = await queuesController.removeQueue(queue);
+      commit({
+        type: UPDATE_QUEUES,
+        queues: queues
+      });
     }
   },
   modules: {}

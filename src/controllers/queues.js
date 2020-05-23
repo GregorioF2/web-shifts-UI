@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 
-const queues = [
+let queues = [
 
 ];
 let id = 0;
@@ -28,4 +28,9 @@ exports.getImage = async() => {
     const res = await axios.get('https://via.placeholder.com/150');
     console.log('res: ');
     
+}
+
+exports.removeQueue = async(queue) => {
+    queues = queues.filter(q => q.id !== queue.id);
+    return queues;
 }

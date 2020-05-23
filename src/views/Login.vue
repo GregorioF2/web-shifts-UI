@@ -8,7 +8,7 @@
 
 <script>
 import {mapActions, mapState} from 'vuex';
-import GeneralButton from '../components/GeneralButton';
+import GeneralButton from '../elements/GeneralButton';
 import BigInput from '../components/BigInput';
 import UserTypeSelection from '../components/UserTypeSelection';
 import {UPDATE_USER} from '../store/mutations-types';
