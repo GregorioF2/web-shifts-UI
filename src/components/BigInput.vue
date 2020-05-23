@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import {UPDATE_USER_NAME} from '../store/mutations-types';
+import {UPDATE_USER} from '../store/mutations-types';
 export default {
   props: {
     title: {
@@ -25,8 +25,8 @@ export default {
   watch: {
     name: function(newVal) {
       this.$store.commit({
-        type: UPDATE_USER_NAME,
-        name: this.name
+        type: UPDATE_USER,
+        user: {name: this.name}
       });
     }
   }

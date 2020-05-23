@@ -1,5 +1,5 @@
 <template>
-  <button class="ui primary basic button button-div" @click.prevent='clickButton()'>{{ title }}</button>
+  <button  class="ui primary basic button button-div" @click.prevent='clickButton()'>{{ title }}</button>
 </template>
 
 <script>
@@ -23,5 +23,6 @@ export default {
   margin: auto;
   height: 200px;
   width: 700px;
+  font-size: 30px;
 }
 </style>

@@ -14,7 +14,7 @@
 
 <script>
 import {mapState} from 'vuex';
-import {UPDATE_USER_TYPE} from '../store/mutations-types';
+import {UPDATE_USER} from '../store/mutations-types';
 import {OWNER_USER_TYPE, CLIENT_USER_TYPE} from '../configs';
 export default {
   data() {
@@ -27,10 +27,9 @@ export default {
     toogleType(type) {
       this.client = type === CLIENT_USER_TYPE;
       this.owner = type === OWNER_USER_TYPE;
-      console.log('Type: ', type);
       this.$store.commit({
-        type: UPDATE_USER_TYPE,
-        userType: type
+        type: UPDATE_USER,
+        user: {type: type}
       });
     }
   },

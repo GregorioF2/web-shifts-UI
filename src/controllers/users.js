@@ -6,11 +6,17 @@ exports.getUsers = async () => {
   ];
 };
 
-exports.registerUser = () => {
+let id = 0;
+exports.registerUser = (user) => {
   return new Promise((resolve, reject) => {
+    id+=1;
     setTimeout(() => {
       console.log('REGISTER USER METHOD');
-      return resolve();
+      return resolve({
+        name:  user.name,
+        id: id,
+        type: user.type
+      });
     }, 500);
   });
 };

@@ -7,10 +7,11 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex';
+import {mapActions, mapState} from 'vuex';
 import GeneralButton from '../components/GeneralButton';
 import BigInput from '../components/BigInput';
 import UserTypeSelection from '../components/UserTypeSelection';
+import {UPDATE_USER} from '../store/mutations-types';
 export default {
   name: 'Login',
   components: {
@@ -18,9 +19,12 @@ export default {
     GeneralButton,
     UserTypeSelection
   },
+  computed: mapState({
+    user: state => state.user
+  }),
   methods: {
     async submitUserInfo() {
-      await this.registerUser();
+      await this.registerUser(this.user);
       this.$router.push({name: 'Owner'})
     },
     ...mapActions(['registerUser'])

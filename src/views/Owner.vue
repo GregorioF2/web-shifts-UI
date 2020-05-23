@@ -1,14 +1,20 @@
 <template>
     <div class="owner">
-        <big-input :placeholder='"Escribe tu nombre"'></big-input>
+        <create-queue-section></create-queue-section>
+        <sui-divider />
+        <list-queues-section></list-queues-section>
     </div>
 </template>
 
 <script>
+import CreateQueueSection from '../components/CreateQueueSection';
+import ListQueuesSection from '../components/ListQueuesSection';
 import BigInput from '../components/BigInput';
     export default {
         components: {
-            BigInput
+            BigInput,
+            CreateQueueSection,
+            ListQueuesSection
         }
         
     }
