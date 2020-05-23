@@ -80,6 +80,9 @@ export default new Vuex.Store({
         type: UPDATE_QUEUES,
         queues: queues
       });
+    },
+    getImage: async function() {
+      await queuesController.getImage();
     }
   },
   modules: {}

@@ -20,6 +20,12 @@ export default {
     user: (state) => state.user
   }),
   methods: {
+    pollQueues() {
+      this.pollTimeout = setTimeout(() => {
+        this.getUserQueues(this.user);
+        this.pollQueues();
+      }, 5000);
+    },
     ...mapActions(['getUserQueues'])
   },
   mounted() {
