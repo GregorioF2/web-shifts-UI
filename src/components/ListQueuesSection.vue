@@ -1,5 +1,7 @@
 <template>
   <div class="main-container">
+    <h1> Colas creadas </h1>
+    <sui-divider />
     <sui-accordion exclusive class="accordion-container">
       <template v-for="(queue, id) in queues">
         <list-queue-row v-bind:key="id" :queue="queue"></list-queue-row>
@@ -37,6 +39,7 @@ export default {
 <style scoped>
 .main-container {
   display: flex;
+  flex-direction: column;
   margin: auto;
   margin-top: 50px;
   width: 700px;

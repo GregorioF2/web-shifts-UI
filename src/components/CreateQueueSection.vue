@@ -4,7 +4,7 @@
       <sui-accordion-title @click="clickOnAccordion" v-bind:class="{active: isActive}">
         <sui-icon v-if="!isActive" name="plus green" size="large" />
         <sui-icon v-else name="minus red" size="large" />
-        <h2>Crear cola de espera</h2>
+        <h1>Crear cola de espera</h1>
       </sui-accordion-title>
       <sui-accordion-content class="content-acordion" v-bind:class="{active: isActive}">
         <create-queue-form></create-queue-form>
@@ -41,7 +41,7 @@ export default {
   margin-bottom: 50px;
   width: 700px;
 }
-h2 {
+h1 {
   display: inline;
 }
 .accordion-container {

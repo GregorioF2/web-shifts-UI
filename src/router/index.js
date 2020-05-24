@@ -2,10 +2,16 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../views/Login.vue'
 import Owner from '../views/Owner.vue'
+import Viewer from '../views/Viewer.vue';
 
 Vue.use(VueRouter)
 
   const routes = [
+  {
+    path: '/viewer',
+    name: 'Viewer',
+    component: Viewer
+  },
   {
     path: '/',
     name: 'Login',

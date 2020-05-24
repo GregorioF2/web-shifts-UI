@@ -1,30 +1,22 @@
 <template>
-  <div class="owner">
+  <div class="viewer">
     <div class="center">
-      <create-queue-section></create-queue-section>
-      <sui-divider />
-      <list-queues-section></list-queues-section>
+      <map-view></map-view>
     </div>
   </div>
 </template>
 
 <script>
-import {mapActions} from 'vuex';
-import CreateQueueSection from '../components/CreateQueueSection';
-import ListQueuesSection from '../components/ListQueuesSection';
-import BigInput from '../components/BigInput';
+import MapView from '../components/Map';
 export default {
   components: {
-    BigInput,
-    CreateQueueSection,
-    ListQueuesSection
-  },
-  methods: {}
+    MapView
+  }
 };
 </script>
 
 <style scoped>
-.owner {
+.viewer {
   height: 100%;
   width: 100%;
   overflow: auto;
