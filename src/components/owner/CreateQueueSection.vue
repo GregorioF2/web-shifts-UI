@@ -1,5 +1,5 @@
 <template>
-  <div class="main-container">
+  <div class="create-queue-main">
     <sui-accordion exclusive class="accordion-container">
       <sui-accordion-title @click="clickOnAccordion" v-bind:class="{active: isActive}">
         <sui-icon v-if="!isActive" name="plus green" size="large" />
@@ -34,7 +34,7 @@ export default {
 </script>
 
 <style scoped>
-.main-container {
+.create-queue-main {
   display: flex;
   margin: auto;
   margin-top: 50px;

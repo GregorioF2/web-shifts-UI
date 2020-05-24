@@ -11,8 +11,8 @@
 <script>
 import {mapActions, mapState} from 'vuex';
 import GeneralButton from '../elements/GeneralButton';
-import BigInput from '../components/BigInput';
-import UserTypeSelection from '../components/UserTypeSelection';
+import BigInput from '../components/login/BigInput';
+import UserTypeSelection from '../components/login/UserTypeSelection';
 import {UPDATE_USER} from '../store/mutations-types';
 import {OWNER_USER_TYPE, CLIENT_USER_TYPE} from '../configs';
 export default {

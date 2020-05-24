@@ -1,11 +1,11 @@
 <template>
-  <div class="main-container">
+  <div class="big-button-main">
     <input class="name-input" type="name" v-model="name" required :placeholder='placeholder' />
   </div>
 </template>
 
 <script>
-import {UPDATE_USER} from '../store/mutations-types';
+import {UPDATE_USER} from '../../store/mutations-types';
 export default {
   props: {
     title: {
@@ -34,7 +34,7 @@ export default {
 </script>
 
 <style scoped>
-.main-container {
+.big-button-main {
   display: flex;
   margin: auto;
   height: 150px;

@@ -1,5 +1,5 @@
 <template>
-  <div class="main-container">
+  <div class="user-type-select-main">
     <div class="ui toggle checkbox checkbox-layout">
       <input type="checkbox" v-model="owner" @change="toogleType('propietario')">
       <label>Propietario</label>
@@ -14,8 +14,8 @@
 
 <script>
 import {mapState} from 'vuex';
-import {UPDATE_USER} from '../store/mutations-types';
-import {OWNER_USER_TYPE, CLIENT_USER_TYPE} from '../configs';
+import {UPDATE_USER} from '../../store/mutations-types';
+import {OWNER_USER_TYPE, CLIENT_USER_TYPE} from '../../configs';
 export default {
   data() {
     return {
@@ -40,7 +40,7 @@ export default {
 </script>
 
 <style scoped>
-.main-container {
+.user-type-select-main {
   display: flex;
   margin: auto;
   height: 50px;

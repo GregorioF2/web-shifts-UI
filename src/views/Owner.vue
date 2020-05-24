@@ -1,6 +1,7 @@
 <template>
   <div class="owner">
     <div class="center">
+      <button @click="goToClient()">GO VIEWER</button>
       <create-queue-section></create-queue-section>
       <sui-divider />
       <list-queues-section></list-queues-section>
@@ -10,16 +11,18 @@
 
 <script>
 import {mapActions} from 'vuex';
-import CreateQueueSection from '../components/CreateQueueSection';
-import ListQueuesSection from '../components/ListQueuesSection';
-import BigInput from '../components/BigInput';
+import CreateQueueSection from '../components/owner/CreateQueueSection';
+import ListQueuesSection from '../components/owner/ListQueuesSection';
 export default {
   components: {
-    BigInput,
     CreateQueueSection,
     ListQueuesSection
   },
-  methods: {}
+  methods: {
+    goToClient(){
+      this.$router.push({name: 'Viewer'});
+    }
+  }
 };
 </script>
 

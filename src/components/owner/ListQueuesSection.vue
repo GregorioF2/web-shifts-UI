@@ -1,10 +1,10 @@
 <template>
-  <div class="main-container">
+  <div class="list-queue-main">
     <h1> Colas creadas </h1>
     <sui-divider />
     <sui-accordion exclusive class="accordion-container">
       <template v-for="(queue, id) in queues">
-        <list-queue-row v-bind:key="id" :queue="queue"></list-queue-row>
+        <row-queue-owner v-bind:key="id" :queue="queue"></row-queue-owner>
       </template>
     </sui-accordion>
   </div>
@@ -12,10 +12,10 @@
 
 <script>
 import {mapActions, mapState} from 'vuex';
-import ListQueueRow from './ListQueueRow';
+import RowQueueOwner from './RowQueueOwner';
 export default {
   components: {
-    ListQueueRow
+    RowQueueOwner
   },
   computed: mapState({
     queues: (state) => state.queues,
@@ -37,7 +37,7 @@ export default {
 </script>
 
 <style scoped>
-.main-container {
+.list-queue-main {
   display: flex;
   flex-direction: column;
   margin: auto;

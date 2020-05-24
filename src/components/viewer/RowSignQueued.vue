@@ -8,7 +8,6 @@
     </sui-accordion-title>
     <sui-accordion-content class="accordion-content" v-bind:class="{active: isActive}">
       <template v-if="isActive">
-        <sui-image class="qr-image" src="https://via.placeholder.com/300" size="small" />
         <div class="queue-summay">
           <form-display
             class="info-queue-display"
@@ -19,6 +18,11 @@
             class="info-queue-display"
             :name="'Cantidad:'"
             :value="`${queue.users.length}/${queue.limit}`"
+          ></form-display>
+          <form-display
+            class="info-queue-display"
+            :name="'posicion:'"
+            :value="9"
           ></form-display>
           <form-display-buttons
             @clickGreenButton='goNexUser'
@@ -34,8 +38,8 @@
 </template>
 
 <script>
-import FormDisplay from '../elements/FormDisplayKV';
-import FormDisplayButtons from '../elements/FormDisplayButtons';
+import FormDisplay from '../../elements/FormDisplayKV';
+import FormDisplayButtons from '../../elements/FormDisplayButtons';
 import {mapActions} from 'vuex';
 export default {
   props: ['queue'],
