@@ -5,7 +5,7 @@
       <sui-divider />
       <sui-accordion exclusive class="accordion-container">
         <template v-for="(queue, id) in availableQueues">
-          <row-sign-queued v-bind:key="id" :queue="queue"></row-sign-queued>
+          <row-available-queue v-bind:key="id" :queue="queue"></row-available-queue>
         </template>
       </sui-accordion>
     </div>
@@ -24,9 +24,11 @@
 <script>
 import {mapActions, mapState} from 'vuex';
 import RowSignQueued from './RowSignQueued';
+import RowAvailableQueue from './RowAvailableQueued';
 export default {
   components: {
-    RowSignQueued
+    RowSignQueued,
+    RowAvailableQueue
   },
   computed: mapState({
     user: (state) => state.user,

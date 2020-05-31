@@ -10,27 +10,18 @@
       <template v-if="isActive">
         <div class="queue-summay">
           <form-display
-            class="info-queue-display"
             :name="'Name:'"
             :value="queue.name"
           ></form-display>
           <form-display
-            class="info-queue-display"
-            :name="'Cantidad:'"
+            :name="'Anotades:'"
             :value="`${queue.queue.length}/${queue.capacity}`"
           ></form-display>
-          <form-display
-            class="info-queue-display"
-            :name="'posicion:'"
-            :value="9"
-          ></form-display>
-          <form-display-buttons
-            @clickGreenButton='letThrough'
-            @clickRedButton='removeQueueOfUser'
-            :name-green-button="'Dejar pasar'"
-            :name-red-button="'Salirme'"
-            class="info-queue-display"
-          ></form-display-buttons>
+          <form-display-button
+            @clickButton='signIn'
+            :name="'Anotarme'"
+            :color='"green"'
+          ></form-display-button>
         </div>
       </template>
     </sui-accordion-content>
@@ -39,30 +30,33 @@
 
 <script>
 import FormDisplay from '../../elements/FormDisplayKV';
-import FormDisplayButtons from '../../elements/FormDisplayButtons';
-import {mapActions} from 'vuex';
+import FormDisplayButton from '../../elements/FormDisplayButton';
+import {mapActions, mapState} from 'vuex';
 export default {
   props: ['queue'],
   components: {
     FormDisplay,
-    FormDisplayButtons
+    FormDisplayButton
   },
   data() {
     return {
       isActive: false
     };
   },
+  computed: mapState({
+    user: (state) => state.user
+  }),
   methods: {
     clickOnAccordion() {
       this.isActive = !this.isActive;
     },
-    letThrough() {
-      console.log('Go next user');
+    signIn() {
+      this.signIntoQueue({user: this.user, queue: this.queue})
     },
     async removeQueueOfUser() {
       await this.removeQueue(this.queue);
     },
-    ...mapActions(['removeQueue'])
+    ...mapActions(['removeQueue', 'signIntoQueue'])
   }
 };
 </script>
@@ -95,8 +89,4 @@ h2 {
   display: inline;
 }
 
-.info-queue-display {
-  margin-left: 20px;
-  margin-right: 20px;
-}
 </style>

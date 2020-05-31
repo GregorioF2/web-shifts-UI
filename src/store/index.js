@@ -7,7 +7,8 @@ import {
   UPDATE_USER_NAME,
   UPDATE_USER,
   UPDATE_QUEUES,
-  UPDATE_CREATED_QUEUES
+  UPDATE_CREATED_QUEUES,
+  ENQUEUE_CLIENT
 } from './mutations-types';
 import {OWNER_USER_TYPE, CLIENT_USER_TYPE} from '../configs';
 
@@ -49,6 +50,9 @@ export default new Vuex.Store({
       if (!isFalsy(payload.user.shopQueues)) {
         Vue.set(state.user, 'shopQueues', payload.user.shopQueues);
       }
+    },
+    [ENQUEUE_CLIENT]: (state, payload) => {
+      state.user.shopQueues.push(payload.queue.id);
     },
     [UPDATE_QUEUES]: (state, payload) => {
       state.queues = payload.queues;
@@ -109,6 +113,13 @@ export default new Vuex.Store({
         type: UPDATE_QUEUES,
         queues: queues
       });
+    },
+    signIntoQueue: async ({commit}, payload) => {
+      await queuesController.enqueueClient(payload.user, payload.queue);
+      commit({
+        type: ENQUEUE_CLIENT,
+        queue: payload.queue
+      })
     }
   },
   modules: {}
