@@ -27,7 +27,6 @@ export default {
   methods: {
     clickOnAccordion() {
       this.isActive = !this.isActive;
-      console.log('esto es un click en el accordion');
     }
   }
 };

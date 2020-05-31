@@ -1,36 +1,39 @@
 const axios = require('axios');
+const configs = require('../configs');
 
 
-let queues = [
+exports.getQueues = async () => {
+    try {
+        const res = await axios.get(configs.SERVER_URL + '/queues');
+        return res.data;
+    } catch(err) {
+        throw new Error(err);
+    };
+}
 
-];
-let id = 0;
-
-exports.getUserQueues = async (user) => {
-    return queues;
+exports.getCreatedUserQueues = async (user) => {
+    try {
+        const res = await axios.get(configs.SERVER_URL + '/queues');
+        return res.data;
+    } catch(err) {
+        throw new Error(err);
+    };
 }
 
 exports.createQueue = async (user, queue) => {
-    id += 1;
-    queue.id = id;
-    
-    const currentAmmountOfClients = Math.floor((queue.limit) * Math.random());
-    const usersIds = [];
-    for(let id = 1; id<= currentAmmountOfClients; id+=1) {
-        usersIds.push(id);
-    }
-    queue.users = usersIds;
-    queues.push(queue);
-    return queues;
+    try {
+        const formData = new FormData();
+        formData.append('name', queue.name);
+        formData.append('capacity', queue.capacity);
+        const res = await axios.post(configs.SERVER_URL + '/queues', formData);
+        return res.data;
+    } catch(err) {
+        throw new Error(err);
+    };
 }
 
 exports.getImage = async() => {
     const res = await axios.get('https://via.placeholder.com/150');
     console.log('res: ');
     
-}
-
-exports.removeQueue = async(queue) => {
-    queues = queues.filter(q => q.id !== queue.id);
-    return queues;
 }

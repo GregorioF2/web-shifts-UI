@@ -8,7 +8,7 @@
       </sui-form-field>
       <sui-form-field width="six">
         <label> Maxima cantidad </label>
-        <input type="number" v-model='newQueue.limit' placeholder="Maxima cantidad" />
+        <input type="number" v-model='newQueue.capacity' placeholder="Maxima cantidad" />
       </sui-form-field>
     </sui-form-fields>
     <sui-form-fields>
@@ -33,14 +33,14 @@ export default {
     return {
       newQueue: {
         name: null,
-        limit: null,
+        capacity: null,
         longitud: null,
         latitud: null
       }
     }
   },
   computed: mapState({
-    queues: (state) => state.queues,
+    queues: (state) => state.createdQueues,
     user: (state) => state.user
   }),
   methods: {

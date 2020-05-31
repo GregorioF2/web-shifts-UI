@@ -32,9 +32,6 @@ export default {
         user: {type: type}
       });
     }
-  },
-  mounted() {
-    console.log('this.$store: ', this.$store);
   }
 };
 </script>

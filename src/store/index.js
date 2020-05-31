@@ -6,7 +6,8 @@ import {
   UPDATE_USER_TYPE,
   UPDATE_USER_NAME,
   UPDATE_USER,
-  UPDATE_QUEUES
+  UPDATE_QUEUES,
+  UPDATE_CREATED_QUEUES
 } from './mutations-types';
 import {OWNER_USER_TYPE, CLIENT_USER_TYPE} from '../configs';
 
@@ -20,10 +21,8 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     queues: [],
-    user: {
-      name: 'default',
-      type: 'propietario'
-    },
+    createdQueues: [],
+    user: {},
     users: [],
     name: ''
   },
@@ -47,9 +46,20 @@ export default new Vuex.Store({
       if (!isFalsy(payload.user.type)) {
         Vue.set(state.user, 'type', payload.user.type);
       }
+      if (!isFalsy(payload.user.shopQueues)) {
+        Vue.set(state.user, 'shopQueues', payload.user.shopQueues);
+      }
     },
     [UPDATE_QUEUES]: (state, payload) => {
       state.queues = payload.queues;
+    },
+    [UPDATE_CREATED_QUEUES]: (state, payload) => {
+      if (!isFalsy(payload.queue)) {
+        state.createdQueues.push(payload.queue);
+      }
+      if (!isFalsy(payload.queues)) {
+        state.createdQueues = payload.queues;
+      }
     }
   },
   actions: {
@@ -61,28 +71,37 @@ export default new Vuex.Store({
       });
     },
     registerUser: async ({commit}, user) => {
+      console.log('register user');
       const userRes = await usersController.registerUser(user);
+      console.log('UserRes: ', userRes);
       commit({
         type: UPDATE_USER,
         user: userRes
       });
     },
-    getUserQueues: async ({commit}, user) => {
-      const queues = await queuesController.getUserQueues(user);
+    getCreatedUserQueues: async ({commit}, user) => {
+      const queues = await queuesController.getCreatedUserQueues(user);
       commit({
-        type: UPDATE_QUEUES,
+        type: UPDATE_CREATED_QUEUES,
         queues: queues
       });
     },
     createQueue: async function(store, payload) {
-      const queues = await queuesController.createQueue(payload.user, payload.queue);
+      const queue = await queuesController.createQueue(payload.user, payload.queue);
       store.commit({
-        type: UPDATE_QUEUES,
-        queues: queues
+        type: UPDATE_CREATED_QUEUES,
+        queue: queue
       });
     },
     getImage: async function() {
       await queuesController.getImage();
+    },
+    getQueues: async function({commit}) {
+      const queues = await queuesController.getQueues();
+      commit({
+        type: UPDATE_QUEUES,
+        queues: queues
+      });
     },
     removeQueue: async ({commit}, queue) => {
       const queues = await queuesController.removeQueue(queue);

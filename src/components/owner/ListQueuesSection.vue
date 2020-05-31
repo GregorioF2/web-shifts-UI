@@ -18,20 +18,21 @@ export default {
     RowQueueOwner
   },
   computed: mapState({
-    queues: (state) => state.queues,
+    queues: (state) => state.createdQueues,
     user: (state) => state.user
   }),
   methods: {
     pollQueues() {
       this.pollTimeout = setTimeout(() => {
-        this.getUserQueues(this.user);
+        this.getCreatedUserQueues(this.user);
         this.pollQueues();
       }, 5000);
     },
-    ...mapActions(['getUserQueues'])
+    ...mapActions(['getCreatedUserQueues'])
   },
   mounted() {
-    this.getUserQueues(this.user);
+    this.getCreatedUserQueues(this.user);
+    this.pollQueues();
   }
 };
 </script>

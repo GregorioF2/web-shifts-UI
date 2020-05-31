@@ -21,6 +21,8 @@
 
 <script>
 import * as VueGoogleMaps from 'vue2-google-maps';
+import Vue from 'vue';
+
 export default {
   components: {
     VueGoogleMaps
@@ -31,17 +33,23 @@ export default {
         {
           position: {lat: -36.617969, lng: -56.702581}
         }
-      ]
+      ],
+      distanceConstant: 0.0001
     };
   },
-  mounted() {
-    this.$refs.mapRef.$mapPromise.then((map) => {
-      google.maps.event.addListener(map, 'click', function( event ){
-      alert( "Latitude: "+event.latLng.lat()+" "+", longitude: "+event.latLng.lng() ); 
+  async mounted() {
+    const map = await this.$refs.mapRef.$mapPromise;
+    const markers = this.markers;
+    google.maps.event.addListener(map, 'click', (event) => {
+      const sw = {
+        lat: event.latLng.lat() - this.distanceConstant,
+        lng: event.latLng.lng() - this.distanceConstant
+      };
+      const ne = {
+        lat: event.latLng.lat() + this.distanceConstant,
+        lng: event.latLng.lng() + this.distanceConstant
+      };
     });
-    })
-      
-    
   }
 };
 </script>
@@ -50,7 +58,7 @@ export default {
 .map-main {
   display: flex;
   margin: auto;
-  height: 500px;
+  height: 400px;
   width: 100%;
 }
 </style>

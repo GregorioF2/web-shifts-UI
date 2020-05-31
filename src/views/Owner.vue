@@ -1,7 +1,8 @@
 <template>
   <div class="owner">
     <div class="center">
-      <button @click="goToClient()">GO VIEWER</button>
+      <change-view-button @buttonClick="logout" :text='"Logout"'></change-view-button>
+      <change-view-button @buttonClick="goToClient" :text='"Ir a Cliente"'></change-view-button>
       <create-queue-section></create-queue-section>
       <sui-divider />
       <list-queues-section></list-queues-section>
@@ -13,14 +14,28 @@
 import {mapActions} from 'vuex';
 import CreateQueueSection from '../components/owner/CreateQueueSection';
 import ListQueuesSection from '../components/owner/ListQueuesSection';
+import ChangeViewButton from '../elements/changeView';
+import {mapState} from 'vuex';
 export default {
   components: {
     CreateQueueSection,
-    ListQueuesSection
+    ListQueuesSection,
+    ChangeViewButton
   },
+  computed: mapState({
+    user: (state) => state.user
+  }),
   methods: {
     goToClient(){
       this.$router.push({name: 'Viewer'});
+    },
+    logout() {
+      this.$router.push({name: 'Login'});
+    }
+  },
+  mounted() {
+    if (JSON.stringify(this.user) === '{}') {
+      this.$router.push({name: 'Login'});
     }
   }
 };

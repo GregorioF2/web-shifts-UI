@@ -17,7 +17,7 @@
           <form-display
             class="info-queue-display"
             :name="'Cantidad:'"
-            :value="`${queue.users.length}/${queue.limit}`"
+            :value="`${queue.queue.length}/${queue.capacity}`"
           ></form-display>
           <form-display
             class="info-queue-display"

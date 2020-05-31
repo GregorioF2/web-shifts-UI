@@ -1,7 +1,8 @@
 <template>
   <div class="viewer">
     <div class="center">
-      <button @click="goToOwner()">GO ONWER</button>
+      <change-view-button @buttonClick="logout" :text='"Logout"'></change-view-button>
+      <change-view-button @buttonClick="goToOwner" :text='"Ir a Dueño"'></change-view-button>
       <map-view></map-view>
       <list-queues></list-queues>
     </div>
@@ -11,14 +12,29 @@
 <script>
 import MapView from '../components/viewer/Map';
 import ListQueues from '../components/viewer/ListQueues';
+import ChangeViewButton from '../elements/changeView';
+import {isFalsy} from '../common/utils';
+import {mapState} from 'vuex';
 export default {
   components: {
     MapView,
-    ListQueues
+    ListQueues,
+    ChangeViewButton
   },
+  computed: mapState({
+    user: (state) => state.user
+  }),
   methods: {
     goToOwner() {
       this.$router.push({name: 'Owner'});
+    },
+    logout() {
+      this.$router.push({name: 'Login'});
+    }
+  },
+  mounted() {
+    if (JSON.stringify(this.user) === '{}') {
+      this.$router.push({name: 'Login'});
     }
   }
 };

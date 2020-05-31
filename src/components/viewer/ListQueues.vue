@@ -4,7 +4,7 @@
       <h1>Colas Disponibles</h1>
       <sui-divider />
       <sui-accordion exclusive class="accordion-container">
-        <template v-for="(queue, id) in queues">
+        <template v-for="(queue, id) in availableQueues">
           <row-sign-queued v-bind:key="id" :queue="queue"></row-sign-queued>
         </template>
       </sui-accordion>
@@ -13,7 +13,7 @@
       <h1>Colas anotadas</h1>
       <sui-divider />
       <sui-accordion exclusive class="accordion-container">
-        <template v-for="(queue, id) in queues">
+        <template v-for="(queue, id) in signedQueues">
           <row-sign-queued v-bind:key="id" :queue="queue"></row-sign-queued>
         </template>
       </sui-accordion>
@@ -29,20 +29,24 @@ export default {
     RowSignQueued
   },
   computed: mapState({
-    queues: (state) => state.queues,
-    user: (state) => state.user
+    user: (state) => state.user,
+    signedQueues: (state) =>
+      state.queues.filter(queue => state.user.shopQueues.includes(queue.id)),
+    availableQueues: (state) =>
+      state.queues.filter(queue => !state.user.shopQueues.includes(queue.id)),
   }),
   methods: {
     pollQueues() {
       this.pollTimeout = setTimeout(() => {
-        this.getUserQueues(this.user);
+        this.getQueues(this.user);
         this.pollQueues();
       }, 5000);
     },
-    ...mapActions(['getUserQueues'])
+    ...mapActions(['getQueues'])
   },
   mounted() {
-    this.getUserQueues(this.user);
+    this.getQueues(this.user);
+    this.pollQueues();
   }
 };
 </script>
@@ -62,5 +66,6 @@ export default {
   display: flex;
   flex-direction: column;
   margin: auto;
+  margin-top: 20px;
 }
 </style>
