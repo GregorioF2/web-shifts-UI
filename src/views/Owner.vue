@@ -1,6 +1,9 @@
 <template>
   <div class="owner">
     <div class="center">
+      <div class="ui active inverted dimmer" v-if="loading">
+        <div class="ui text loader">Loading</div>
+      </div>
       <change-view-button @buttonClick="logout" :text='"Logout"'></change-view-button>
       <change-view-button @buttonClick="goToClient" :text='"Ir a Cliente"'></change-view-button>
       <create-queue-section></create-queue-section>
@@ -23,7 +26,8 @@ export default {
     ChangeViewButton
   },
   computed: mapState({
-    user: (state) => state.user
+    user: (state) => state.user,
+    loading: (state) => state.loading
   }),
   methods: {
     goToClient(){

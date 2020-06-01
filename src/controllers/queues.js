@@ -6,7 +6,7 @@ exports.getQueues = async () => {
     const res = await axios.get(configs.SERVER_URL + '/queues');
     return res.data;
   } catch (err) {
-    console.err('ERROR :: error in get queues');
+    console.error('ERROR :: error in get queues');
     throw new Error(err);
   }
 };
@@ -16,7 +16,7 @@ exports.enqueueClient = async (user, queue) => {
   try {
     await axios.post(configs.SERVER_URL + `/queues/${queue.id}?client_id=${user.id}`);
   } catch (err) {
-    console.err('ERROR :: error in enque client');
+    console.error('ERROR :: error in enque client');
     throw new Error(err);
   }
 };
@@ -26,7 +26,7 @@ exports.getCreatedUserQueues = async (user) => {
     const res = await axios.get(configs.SERVER_URL + '/queues');
     return res.data;
   } catch (err) {
-    console.err('ERROR :: error in get user created queues');
+    console.error('ERROR :: error in get user created queues');
     throw new Error(err);
   }
 };
@@ -39,7 +39,7 @@ exports.createQueue = async (user, queue) => {
     const res = await axios.post(configs.SERVER_URL + '/queues', formData);
     return res.data;
   } catch (err) {
-    console.err('ERROR :: error in get created queue');
+    console.error('ERROR :: error in get created queue');
     throw new Error(err);
   }
 };

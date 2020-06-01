@@ -27,7 +27,8 @@
 </template>
 
 <script>
-import {mapActions, mapState} from 'vuex';
+import {mapActions, mapState, mapMutations} from 'vuex';
+import {UPDATE_LOADING} from '../../store/mutations-types';
 export default {
   data() {
     return {
@@ -44,9 +45,14 @@ export default {
     user: (state) => state.user
   }),
   methods: {
-    submitQueue() {
-      this.createQueue({user: this.user, queue: {...this.newQueue}});
+    async submitQueue() {
+      this.updateLoading({loading: true});
+      await this.createQueue({user: this.user, queue: {...this.newQueue}});
+      this.updateLoading({loading: false});
     },
+    ...mapMutations({
+      updateLoading: UPDATE_LOADING
+    }),
     ...mapActions(['createQueue'])
   }
 };

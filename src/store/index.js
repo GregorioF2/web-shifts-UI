@@ -8,7 +8,8 @@ import {
   UPDATE_USER,
   UPDATE_QUEUES,
   UPDATE_CREATED_QUEUES,
-  ENQUEUE_CLIENT
+  ENQUEUE_CLIENT,
+  UPDATE_LOADING
 } from './mutations-types';
 import {OWNER_USER_TYPE, CLIENT_USER_TYPE} from '../configs';
 
@@ -25,7 +26,8 @@ export default new Vuex.Store({
     createdQueues: [],
     user: {},
     users: [],
-    name: ''
+    name: '',
+    loading: false
   },
   getters: {
     propietarios: (state) => state.users.filter((user) => user.type === OWNER_USER_TYPE)
@@ -53,6 +55,7 @@ export default new Vuex.Store({
     },
     [ENQUEUE_CLIENT]: (state, payload) => {
       state.user.shopQueues.push(payload.queue.id);
+      console.log('termino de pushear cliente');
     },
     [UPDATE_QUEUES]: (state, payload) => {
       state.queues = payload.queues;
@@ -64,6 +67,10 @@ export default new Vuex.Store({
       if (!isFalsy(payload.queues)) {
         state.createdQueues = payload.queues;
       }
+    },
+    [UPDATE_LOADING]: (state, payload) => {
+      console.log('loading: ', payload.loading);
+      state.loading = payload.loading;
     }
   },
   actions: {
@@ -92,6 +99,8 @@ export default new Vuex.Store({
     },
     createQueue: async function(store, payload) {
       const queue = await queuesController.createQueue(payload.user, payload.queue);
+
+      console.log('create queeu finish');
       store.commit({
         type: UPDATE_CREATED_QUEUES,
         queue: queue
@@ -120,6 +129,10 @@ export default new Vuex.Store({
         type: ENQUEUE_CLIENT,
         queue: payload.queue
       })
+    },
+    clientLetThroughInQueue: async({commit}, payload) => {
+      await usersController.letThrough(payload.user, payload.queue);
+      console.log('reuquest let through finished');
     }
   },
   modules: {}

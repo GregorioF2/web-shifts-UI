@@ -31,7 +31,8 @@
 <script>
 import FormDisplay from '../../elements/FormDisplayKV';
 import FormDisplayButton from '../../elements/FormDisplayButton';
-import {mapActions, mapState} from 'vuex';
+import {UPDATE_LOADING} from '../../store/mutations-types';
+import {mapActions, mapState, mapMutations} from 'vuex';
 export default {
   props: ['queue'],
   components: {
@@ -50,12 +51,17 @@ export default {
     clickOnAccordion() {
       this.isActive = !this.isActive;
     },
-    signIn() {
-      this.signIntoQueue({user: this.user, queue: this.queue})
+    async signIn() {
+      this.updateLoading({loading: true});
+      await this.signIntoQueue({user: this.user, queue: this.queue});
+      this.updateLoading({loading: false});
     },
     async removeQueueOfUser() {
       await this.removeQueue(this.queue);
     },
+    ...mapMutations({
+      updateLoading: UPDATE_LOADING
+    }),
     ...mapActions(['removeQueue', 'signIntoQueue'])
   }
 };

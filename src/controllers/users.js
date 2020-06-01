@@ -11,12 +11,13 @@ const mapUserProperties = (user) => {
 };
 
 exports.getUsers = async () => {
-  return [
-    {type: 'propietario', id: 1, name: 'juan'},
-    {type: 'propietario', id: 2, name: 'domingo'},
-    {type: 'cliente', id: 3, name: 'peron'}
-  ];
+  return axios.get(configs.SERVER_URL + '/clients');
 };
+
+exports.letThrough = async (user, queue) => {
+  await axios.post(configs.SERVER_URL + `/clients/${user.id}/let_through?queue_id=${queue.id}`);
+  return;
+}
 
 exports.registerUser = async (user) => {
   try {

@@ -10,26 +10,19 @@
       <template v-if="isActive">
         <div class="queue-summay">
           <form-display
-            class="info-queue-display"
             :name="'Name:'"
             :value="queue.name"
           ></form-display>
           <form-display
-            class="info-queue-display"
             :name="'Cantidad:'"
             :value="`${queue.queue.length}/${queue.capacity}`"
           ></form-display>
-          <form-display
-            class="info-queue-display"
-            :name="'posicion:'"
-            :value="9"
-          ></form-display>
+          <form-display :name="'posicion:'" :value="position"></form-display>
           <form-display-buttons
-            @clickGreenButton='letThrough'
-            @clickRedButton='removeQueueOfUser'
+            @clickGreenButton="letThrough"
+            @clickRedButton="removeQueueOfUser"
             :name-green-button="'Dejar pasar'"
             :name-red-button="'Salirme'"
-            class="info-queue-display"
           ></form-display-buttons>
         </div>
       </template>
@@ -40,7 +33,8 @@
 <script>
 import FormDisplay from '../../elements/FormDisplayKV';
 import FormDisplayButtons from '../../elements/FormDisplayButtons';
-import {mapActions} from 'vuex';
+import {mapActions, mapState, mapMutations} from 'vuex';
+import {UPDATE_LOADING} from '../../store/mutations-types';
 export default {
   props: ['queue'],
   components: {
@@ -52,17 +46,29 @@ export default {
       isActive: false
     };
   },
+  computed: mapState({
+    user: (state) => state.user,
+    position: function() {
+      return this.queue.queue.map(client => client.id).indexOf(this.user.id) + 1;
+    }
+  }),
   methods: {
     clickOnAccordion() {
       this.isActive = !this.isActive;
     },
-    letThrough() {
-      console.log('Go next user');
+    async letThrough() {
+      this.updateLoading({loading: true});
+      await this.clientLetThroughInQueue({user: this.user, queue: this.queue});
+      await this.getQueues();
+      this.updateLoading({loading: false});
     },
     async removeQueueOfUser() {
       await this.removeQueue(this.queue);
     },
-    ...mapActions(['removeQueue'])
+    ...mapMutations({
+      updateLoading: UPDATE_LOADING
+    }),
+    ...mapActions(['removeQueue', 'clientLetThroughInQueue', 'getQueues'])
   }
 };
 </script>
@@ -93,10 +99,5 @@ h2 {
 
 .qr-image {
   display: inline;
-}
-
-.info-queue-display {
-  margin-left: 20px;
-  margin-right: 20px;
 }
 </style>

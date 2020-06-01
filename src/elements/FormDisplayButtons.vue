@@ -20,6 +20,7 @@ export default {
   props: ['nameGreenButton', 'nameRedButton'],
   methods: {
       clickGreenButton() {
+        console.log('click green');
           this.$emit('clickGreenButton');
       },
       clickRedButton() {
