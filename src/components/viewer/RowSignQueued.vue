@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-bind:class="{highlited: highlit, rowqueue: true}">
     <sui-accordion-title @click="clickOnAccordion()" v-bind:class="{active: isActive}">
       <sui-icon name="dropdown" />
       <h2 class="id-h2">{{ queue.id }}</h2>
@@ -9,13 +9,10 @@
     <sui-accordion-content class="accordion-content" v-bind:class="{active: isActive}">
       <template v-if="isActive">
         <div class="queue-summay">
-          <form-display
-            :name="'Name:'"
-            :value="queue.name"
-          ></form-display>
+          <form-display :name="'Name:'" :value="queue.name"></form-display>
           <form-display
             :name="'Cantidad:'"
-            :value="`${queue.queue.length}/${queue.capacity}`"
+            :value="`${queue.entriesAmount}/${queue.capacity}`"
           ></form-display>
           <form-display :name="'posicion:'" :value="position"></form-display>
           <form-display-buttons
@@ -43,24 +40,43 @@ export default {
   },
   data() {
     return {
+      highlit: false,
       isActive: false
     };
   },
   computed: mapState({
     user: (state) => state.user,
-    position: function() {
-      return this.queue.queue.map(client => client.id).indexOf(this.user.id) + 1;
+    position: function(state) {
+      const signedQueue = state.signedQueues.find((queue) => this.queue.id);
+      return signedQueue.position;
     }
   }),
   methods: {
+    highlight() {
+      console.log('highlit queue: ', this.queue.id);
+      this.highlit = true;
+      this.isActive = true;
+      setTimeout(() => {
+        this.highlit = false;
+      }, 300);
+    },
     clickOnAccordion() {
       this.isActive = !this.isActive;
     },
     async letThrough() {
-      this.updateLoading({loading: true});
-      await this.clientLetThroughInQueue({user: this.user, queue: this.queue});
-      await this.getQueues();
-      this.updateLoading({loading: false});
+      try {
+        this.updateLoading({loading: true});
+        await this.clientLetThroughInQueue({user: this.user, queue: this.queue});
+        await this.getQueues();
+      } catch (err) {
+        this.pushNotification({
+          type: 'negative',
+          title: 'Error al dejar pasar',
+          message: err
+        });
+      } finally {
+        this.updateLoading({loading: false});
+      }
     },
     async removeQueueOfUser() {
       await this.removeQueue(this.queue);
@@ -68,7 +84,7 @@ export default {
     ...mapMutations({
       updateLoading: UPDATE_LOADING
     }),
-    ...mapActions(['removeQueue', 'clientLetThroughInQueue', 'getQueues'])
+    ...mapActions(['removeQueue', 'clientLetThroughInQueue', 'getQueues', 'pushNotification'])
   }
 };
 </script>
@@ -99,5 +115,9 @@ h2 {
 
 .qr-image {
   display: inline;
+}
+
+.highlited {
+  border: 3px solid red;
 }
 </style>

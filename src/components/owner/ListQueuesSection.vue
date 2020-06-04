@@ -1,6 +1,6 @@
 <template>
   <div class="list-queue-main">
-    <h1> Colas creadas </h1>
+    <h1>Colas creadas</h1>
     <sui-divider />
     <sui-accordion exclusive class="accordion-container">
       <template v-for="(queue, id) in queues">
@@ -23,12 +23,20 @@ export default {
   }),
   methods: {
     pollQueues() {
-      this.pollTimeout = setTimeout(() => {
-        this.getCreatedUserQueues(this.user);
-        this.pollQueues();
+      this.pollTimeout = setTimeout(async () => {
+        try {
+          this.getCreatedUserQueues(this.user);
+          this.pollQueues();
+        } catch (err) {
+          this.pushNotification({
+            type: 'negative',
+            title: 'Error obteniendo informacion',
+            message: err
+          });
+        }
       }, 5000);
     },
-    ...mapActions(['getCreatedUserQueues'])
+    ...mapActions(['getCreatedUserQueues', 'pushNotification'])
   },
   mounted() {
     this.getCreatedUserQueues(this.user);

@@ -5,7 +5,11 @@
       <sui-divider />
       <sui-accordion exclusive class="accordion-container">
         <template v-for="(queue, id) in availableQueues">
-          <row-available-queue v-bind:key="id" :queue="queue"></row-available-queue>
+          <row-available-queue 
+            v-bind:key="id"
+            :queue="queue"
+            :ref="`queue-${queue.id}`">
+          </row-available-queue>
         </template>
       </sui-accordion>
     </div>
@@ -13,8 +17,13 @@
       <h1>Colas anotadas</h1>
       <sui-divider />
       <sui-accordion exclusive class="accordion-container">
-        <template v-for="(queue, id) in signedQueues">
-          <row-sign-queued v-bind:key="id" :queue="queue"></row-sign-queued>
+        <template v-for="(queue, id) in queuesSigned">
+          <row-sign-queued
+            v-bind:key="id"
+            :queue="queue"
+            :ref="`queue-${queue.id}`"
+          >
+          </row-sign-queued>
         </template>
       </sui-accordion>
     </div>
@@ -30,25 +39,24 @@ export default {
     RowSignQueued,
     RowAvailableQueue
   },
+  props: ['queues', 'selected'],
   computed: mapState({
     user: (state) => state.user,
-    signedQueues: (state) =>
-      state.queues.filter(queue => state.user.shopQueues.includes(queue.id)),
-    availableQueues: (state) =>
-      state.queues.filter(queue => !state.user.shopQueues.includes(queue.id)),
-  }),
-  methods: {
-    pollQueues() {
-      this.pollTimeout = setTimeout(() => {
-        this.getQueues(this.user);
-        this.pollQueues();
-      }, 5000);
+    signedQueuesIds: (state) => state.signedQueues.map((queue) => queue.id),
+    queuesSigned: function(state) {
+      return this.queues.filter(queue => this.signedQueuesIds.includes(queue.id))
     },
-    ...mapActions(['getQueues'])
-  },
-  mounted() {
-    this.getQueues(this.user);
-    this.pollQueues();
+    availableQueues: function(state) {
+      return this.queues.filter(queue => !this.signedQueuesIds.includes(queue.id))
+    },
+  }),
+  watch: {
+    selected: function(queue) {
+      console.log('selected queue: ', queue.id);
+      const key = `queue-${queue.id}`;
+      const acordion = this.$refs[key];
+      acordion[0].highlight();
+    }
   }
 };
 </script>

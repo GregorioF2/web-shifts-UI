@@ -2,8 +2,8 @@
   <div class="map-main">
     <GmapMap
       ref="mapRef"
-      :center="{lat: -36.617969, lng: -56.702581}"
-      :zoom="15"
+      :center="{lat: -34.559282, lng: -58.458943}"
+      :zoom="14"
       map-type-id="terrain"
       style="width: 100%; height: 100%;"
     >
@@ -12,8 +12,8 @@
         v-for="(m, index) in markers"
         :position="m.position"
         :clickable="true"
-        :draggable="true"
-        @click="center = m.position"
+        :draggable="false"
+        @click="clickMarker(m)"
       />
     </GmapMap>
   </div>
@@ -27,28 +27,21 @@ export default {
   components: {
     VueGoogleMaps
   },
+  props: ['markers'],
   data() {
-    return {
-      markers: [
-        {
-          position: {lat: -36.617969, lng: -56.702581}
-        }
-      ],
-      distanceConstant: 0.0001
-    };
+    return {};
+  },
+  methods: {
+    clickMarker(marker) {
+      this.$emit('clickMarker', marker);
+    }
   },
   async mounted() {
     const map = await this.$refs.mapRef.$mapPromise;
-    const markers = this.markers;
     google.maps.event.addListener(map, 'click', (event) => {
-      const sw = {
-        lat: event.latLng.lat() - this.distanceConstant,
-        lng: event.latLng.lng() - this.distanceConstant
-      };
-      const ne = {
-        lat: event.latLng.lat() + this.distanceConstant,
-        lng: event.latLng.lng() + this.distanceConstant
-      };
+      const lng = event.latLng.lng();
+      const lat = event.latLng.lat();
+      this.$emit('clickOnMap', lng, lat);
     });
   }
 };

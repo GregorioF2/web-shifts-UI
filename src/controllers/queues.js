@@ -11,8 +11,11 @@ exports.getQueues = async () => {
   }
 };
 
+exports.serveNext = async (queueId) => {
+  return axios.put(configs.SERVER_URL + `/queues/${queueId}/serve_next`);
+}
+
 exports.enqueueClient = async (user, queue) => {
-    console.log('tuvieja');
   try {
     await axios.post(configs.SERVER_URL + `/queues/${queue.id}?client_id=${user.id}`);
   } catch (err) {
@@ -23,7 +26,7 @@ exports.enqueueClient = async (user, queue) => {
 
 exports.getCreatedUserQueues = async (user) => {
   try {
-    const res = await axios.get(configs.SERVER_URL + '/queues');
+    const res = await axios.get(configs.SERVER_URL + `/owners/${user.id}`);
     return res.data;
   } catch (err) {
     console.error('ERROR :: error in get user created queues');
@@ -36,10 +39,13 @@ exports.createQueue = async (user, queue) => {
     const formData = new FormData();
     formData.append('name', queue.name);
     formData.append('capacity', queue.capacity);
+    formData.append('longitude', queue.longitude);
+    formData.append('latitude', queue.latitude);
+    formData.append('owner_id', user.id);
+
     const res = await axios.post(configs.SERVER_URL + '/queues', formData);
     return res.data;
   } catch (err) {
-    console.error('ERROR :: error in get created queue');
     throw new Error(err);
   }
 };

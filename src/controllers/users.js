@@ -5,13 +5,14 @@ const mapUserProperties = (user) => {
   return {
     id: user.id,
     name: user.name,
-    type: user.type === 'Client' ? configs.CLIENT_USER_TYPE : configs.OWNER_USER_TYPE,
+    type: user.type === 'client' ? configs.CLIENT_USER_TYPE : configs.OWNER_USER_TYPE,
     shopQueues: user.shop_queues || [] 
   };
 };
 
 exports.getUsers = async () => {
-  return axios.get(configs.SERVER_URL + '/clients');
+  const res = await(axios.get(configs.SERVER_URL + '/clients'));
+  return res.data
 };
 
 exports.letThrough = async (user, queue) => {
@@ -35,3 +36,12 @@ exports.registerUser = async (user) => {
     throw new Error(err);
   }
 };
+
+exports.getSignedQueues = async (userId) => {
+  try {
+    return (await axios.get(configs.SERVER_URL + `/clients/${userId}/shop_queues`)).data;
+  } catch(err) {
+    console.error('ERROR :: Error getting signed queues');
+    throw new Error(err);
+  }
+}

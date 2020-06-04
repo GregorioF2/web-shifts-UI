@@ -2,13 +2,13 @@
   <div class="display-form-section">
     <sui-button
       color="green"
-      @click.prevent='clickGreenButton()'
+      @click.prevent="clickGreenButton()"
       v-bind:content="nameGreenButton"
       basic
     />
     <sui-button
       color="red"
-      @click.prevent='clickRedButton()'
+      @click.prevent="clickRedButton()"
       v-bind:content="nameRedButton"
       basic
     />
@@ -19,13 +19,12 @@
 export default {
   props: ['nameGreenButton', 'nameRedButton'],
   methods: {
-      clickGreenButton() {
-        console.log('click green');
-          this.$emit('clickGreenButton');
-      },
-      clickRedButton() {
-          this.$emit('clickRedButton');
-      }
+    clickGreenButton() {
+      this.$emit('clickGreenButton');
+    },
+    clickRedButton() {
+      this.$emit('clickRedButton');
+    }
   }
 };
 </script>

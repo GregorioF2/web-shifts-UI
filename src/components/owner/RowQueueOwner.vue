@@ -18,11 +18,16 @@
           <form-display
             class="info-queue-display"
             :name="'Cantidad:'"
-            :value="`${queue.queue.length}/${queue.capacity}`"
+            :value="`${queue.entriesAmount}/${queue.capacity}`"
+          ></form-display>
+          <form-display
+            class="info-queue-display"
+            :name="'Cliente actual:'"
+            :value="`${currentClient}`"
           ></form-display>
           <form-display-buttons
-            @clickGreenButton='goNexUser'
-            @clickRedButton='removeQueueOfUser'
+            @clickGreenButton="goNexUser"
+            @clickRedButton="removeQueueOfUser"
             :name-green-button="'Siguiente cliente'"
             :name-red-button="'Eliminar'"
             class="info-queue-display"
@@ -36,7 +41,8 @@
 <script>
 import FormDisplay from '../../elements/FormDisplayKV';
 import FormDisplayButtons from '../../elements/FormDisplayButtons';
-import {mapActions} from 'vuex';
+import {mapActions, mapState, mapMutations} from 'vuex';
+import {UPDATE_LOADING} from '../../store/mutations-types';
 export default {
   props: ['queue'],
   components: {
@@ -48,17 +54,48 @@ export default {
       isActive: false
     };
   },
+  computed: mapState({
+    currentClient: function(state) {
+      const userIdx = state.users.findIndex((user) => user.id === this.queue.actualClientId);
+      return userIdx < 0 ? 'Ninguno' : state.users[userIdx].name;
+    },
+    user: (state) => state.user
+  }),
   methods: {
     clickOnAccordion() {
       this.isActive = !this.isActive;
     },
-    goNexUser() {
-      console.log('Go next user');
+    async goNexUser() {
+      try {
+        this.updateLoading({loading: true});
+        await this.serveNext({
+          queueId: this.queue.id
+        });
+        await this.getCreatedUserQueues(this.user);
+        await this.refreshUsers();
+      } catch (err) {
+        this.pushNotification({
+          type: 'negative',
+          title: 'No se pudo pasar al siguiente',
+          message: err
+        });
+      } finally {
+        this.updateLoading({loading: false});
+      }
     },
     async removeQueueOfUser() {
       await this.removeQueue(this.queue);
     },
-    ...mapActions(['removeQueue'])
+    ...mapMutations({
+      updateLoading: UPDATE_LOADING
+    }),
+    ...mapActions([
+      'removeQueue',
+      'serveNext',
+      'pushNotification',
+      'getCreatedUserQueues',
+      'refreshUsers'
+    ])
   }
 };
 </script>

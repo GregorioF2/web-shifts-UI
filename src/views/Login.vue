@@ -1,6 +1,10 @@
 <template>
   <div class="login">
     <div class="center">
+      <notifications></notifications>
+      <div class="ui active inverted dimmer" v-if="loading">
+        <div class="ui text loader">Loading</div>
+      </div>
       <big-input :placeholder="'Escribe tu nombre'"></big-input>
       <user-type-selection></user-type-selection>
       <general-button @buttonClick="submitUserInfo" :title="'Registrarme'"></general-button>
@@ -9,29 +13,46 @@
 </template>
 
 <script>
-import {mapActions, mapState} from 'vuex';
+import {mapActions, mapState, mapMutations} from 'vuex';
 import GeneralButton from '../elements/GeneralButton';
 import BigInput from '../components/login/BigInput';
 import UserTypeSelection from '../components/login/UserTypeSelection';
-import {UPDATE_USER} from '../store/mutations-types';
+import Notifications from '../elements/NotificationHandler';
+import {UPDATE_USER, UPDATE_LOADING} from '../store/mutations-types';
 import {OWNER_USER_TYPE, CLIENT_USER_TYPE} from '../configs';
 export default {
   name: 'Login',
   components: {
     BigInput,
     GeneralButton,
-    UserTypeSelection
+    UserTypeSelection,
+    Notifications
   },
   computed: mapState({
-    user: (state) => state.user
+    user: (state) => state.user,
+    loading: (state) => state.loading
   }),
   methods: {
     async submitUserInfo() {
-      await this.registerUser(this.user);
-      const redirect = this.user.type === OWNER_USER_TYPE ? 'Owner' : 'Viewer';
-      this.$router.push({name: redirect});
+      try {
+        this.updateLoading({loading: true});
+        await this.registerUser(this.user);
+        const redirect = this.user.type === OWNER_USER_TYPE ? 'Owner' : 'Viewer';
+        this.$router.push({name: redirect});
+      } catch (err) {
+        this.pushNotification({
+          type: 'negative',
+          title: 'Error registrando usuario',
+          message: err
+        });
+      } finally {
+        this.updateLoading({loading: false});
+      }
     },
-    ...mapActions(['registerUser'])
+    ...mapMutations({
+      updateLoading: UPDATE_LOADING
+    }),
+    ...mapActions(['registerUser', 'pushNotification'])
   }
 };
 </script>
@@ -54,8 +75,8 @@ export default {
   margin-bottom: 0px;
   width: calc(1300px - 20%);
   height: 100%;
-  border-left: 5px solid rgba(0, 0, 0, .5);
-  border-right: 5px solid rgba(0, 0, 0, .5);
+  border-left: 5px solid rgba(0, 0, 0, 0.5);
+  border-right: 5px solid rgba(0, 0, 0, 0.5);
   flex-direction: column;
   display: flex;
 }

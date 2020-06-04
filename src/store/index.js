@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import shortid from 'shortid';
 import {
   ADD_OWNER,
   REFRESH_USERS,
@@ -9,7 +10,10 @@ import {
   UPDATE_QUEUES,
   UPDATE_CREATED_QUEUES,
   ENQUEUE_CLIENT,
-  UPDATE_LOADING
+  UPDATE_LOADING,
+  PUSH_NOTIFICATION,
+  DELETE_NOTIFICATION,
+  UPDATE_SIGNED_QUEUES
 } from './mutations-types';
 import {OWNER_USER_TYPE, CLIENT_USER_TYPE} from '../configs';
 
@@ -23,11 +27,13 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     queues: [],
+    signedQueues: [],
     createdQueues: [],
     user: {},
     users: [],
     name: '',
-    loading: false
+    loading: false,
+    notifications: []
   },
   getters: {
     propietarios: (state) => state.users.filter((user) => user.type === OWNER_USER_TYPE)
@@ -55,7 +61,6 @@ export default new Vuex.Store({
     },
     [ENQUEUE_CLIENT]: (state, payload) => {
       state.user.shopQueues.push(payload.queue.id);
-      console.log('termino de pushear cliente');
     },
     [UPDATE_QUEUES]: (state, payload) => {
       state.queues = payload.queues;
@@ -64,13 +69,26 @@ export default new Vuex.Store({
       if (!isFalsy(payload.queue)) {
         state.createdQueues.push(payload.queue);
       }
-      if (!isFalsy(payload.queues)) {
-        state.createdQueues = payload.queues;
+      if (!isFalsy(payload.queuesIds)) {
+        state.createdQueues = state.queues.filter((queue) => payload.queuesIds.includes(queue.id));
       }
     },
+    [UPDATE_SIGNED_QUEUES]: (state, payload) => {
+      state.signedQueues = payload.queues;
+    },
     [UPDATE_LOADING]: (state, payload) => {
-      console.log('loading: ', payload.loading);
       state.loading = payload.loading;
+    },
+    [PUSH_NOTIFICATION]: (state, payload) => {
+      state.notifications.push(payload.notification);
+    },
+    [DELETE_NOTIFICATION]: (state, payload) => {
+      const id = payload.id;
+      const notificationsClone = state.notifications.slice();
+      const index = notificationsClone.findIndex((notification) => notification.id === id);
+      state.notifications = notificationsClone
+        .slice(0, index)
+        .concat(notificationsClone.slice(index + 1, notificationsClone.length));
     }
   },
   actions: {
@@ -82,25 +100,23 @@ export default new Vuex.Store({
       });
     },
     registerUser: async ({commit}, user) => {
-      console.log('register user');
       const userRes = await usersController.registerUser(user);
-      console.log('UserRes: ', userRes);
       commit({
         type: UPDATE_USER,
         user: userRes
       });
     },
-    getCreatedUserQueues: async ({commit}, user) => {
-      const queues = await queuesController.getCreatedUserQueues(user);
+    getCreatedUserQueues: async function({commit, dispatch}, user) {
+      const queuesIds = (await queuesController.getCreatedUserQueues(user)).owned_queues;
+      await dispatch('getQueues');
       commit({
         type: UPDATE_CREATED_QUEUES,
-        queues: queues
+        queuesIds: queuesIds
       });
     },
     createQueue: async function(store, payload) {
       const queue = await queuesController.createQueue(payload.user, payload.queue);
 
-      console.log('create queeu finish');
       store.commit({
         type: UPDATE_CREATED_QUEUES,
         queue: queue
@@ -109,7 +125,11 @@ export default new Vuex.Store({
     getImage: async function() {
       await queuesController.getImage();
     },
-    getQueues: async function({commit}) {
+    getQueuesAndRefreshUsers: async function({commit, dispatch}) {
+      await dispatch('refreshUsers');
+      await dispatch('getQueues');
+    },
+    getQueues: async function({commit, dispatch}) {
       const queues = await queuesController.getQueues();
       commit({
         type: UPDATE_QUEUES,
@@ -123,16 +143,49 @@ export default new Vuex.Store({
         queues: queues
       });
     },
-    signIntoQueue: async ({commit}, payload) => {
+    signIntoQueue: async ({commit, dispatch}, payload) => {
       await queuesController.enqueueClient(payload.user, payload.queue);
+      await dispatch('getQueues');
+      await dispatch('getSignedQueuesOfClient', payload.user.id);
       commit({
         type: ENQUEUE_CLIENT,
         queue: payload.queue
-      })
+      });
     },
-    clientLetThroughInQueue: async({commit}, payload) => {
-      await usersController.letThrough(payload.user, payload.queue);
-      console.log('reuquest let through finished');
+    clientLetThroughInQueue: async ({commit}, payload) => {
+      return usersController.letThrough(payload.user, payload.queue);
+    },
+    serveNext: async ({commit, dispatch}, payload) => {
+      await queuesController.serveNext(payload.queueId);
+    },
+    pushNotification: async ({commit}, notification) => {
+      notification.id = shortid.generate();
+      commit({
+        type: PUSH_NOTIFICATION,
+        notification: notification
+      });
+      if (notification.type !== 'negative') {
+        setTimeout(() => {
+          commit({
+            type: DELETE_NOTIFICATION,
+            id: notification.id
+          });
+        }, 5000);
+      }
+    },
+    deleteNotification: async ({commit}, id) => {
+      commit({
+        type: DELETE_NOTIFICATION,
+        id: id
+      });
+    },
+    getSignedQueuesOfClient: async ({commit}, userId) => {
+      const queues = await usersController.getSignedQueues(userId);
+      console.log('Queues: ', queues);
+      commit({
+        type: UPDATE_SIGNED_QUEUES,
+        queues: queues
+      });
     }
   },
   modules: {}

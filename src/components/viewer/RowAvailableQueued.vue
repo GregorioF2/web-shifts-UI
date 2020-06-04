@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-bind:class="{highlited: highlit}">
     <sui-accordion-title @click="clickOnAccordion()" v-bind:class="{active: isActive}">
       <sui-icon name="dropdown" />
       <h2 class="id-h2">{{ queue.id }}</h2>
@@ -9,18 +9,15 @@
     <sui-accordion-content class="accordion-content" v-bind:class="{active: isActive}">
       <template v-if="isActive">
         <div class="queue-summay">
-          <form-display
-            :name="'Name:'"
-            :value="queue.name"
-          ></form-display>
+          <form-display :name="'Name:'" :value="queue.name"></form-display>
           <form-display
             :name="'Anotades:'"
-            :value="`${queue.queue.length}/${queue.capacity}`"
+            :value="`${queue.entriesAmount}/${queue.capacity}`"
           ></form-display>
           <form-display-button
-            @clickButton='signIn'
+            @clickButton="signIn"
             :name="'Anotarme'"
-            :color='"green"'
+            :color="'green'"
           ></form-display-button>
         </div>
       </template>
@@ -41,19 +38,36 @@ export default {
   },
   data() {
     return {
-      isActive: false
+      isActive: false,
+      highlit: false
     };
   },
   computed: mapState({
     user: (state) => state.user
   }),
   methods: {
+    highlight() {
+      console.log('highlit queue: ', this.queue.id);
+      this.highlit = true;
+      this.isActive = true;
+      setTimeout(() => {
+        this.highlit = false;
+      }, 300);
+    },
     clickOnAccordion() {
       this.isActive = !this.isActive;
     },
     async signIn() {
-      this.updateLoading({loading: true});
-      await this.signIntoQueue({user: this.user, queue: this.queue});
+      try {
+        this.updateLoading({loading: true});
+        await this.signIntoQueue({user: this.user, queue: this.queue});
+      } catch (err) {
+        this.pushNotification({
+          type: 'negative',
+          title: 'Error anotandose a cola',
+          message: 'err'
+        });
+      }
       this.updateLoading({loading: false});
     },
     async removeQueueOfUser() {
@@ -62,7 +76,7 @@ export default {
     ...mapMutations({
       updateLoading: UPDATE_LOADING
     }),
-    ...mapActions(['removeQueue', 'signIntoQueue'])
+    ...mapActions(['removeQueue', 'signIntoQueue', 'pushNotification'])
   }
 };
 </script>
@@ -95,4 +109,7 @@ h2 {
   display: inline;
 }
 
+.highlited {
+  border: 3px solid red;
+}
 </style>
