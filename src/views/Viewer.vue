@@ -48,7 +48,6 @@ export default {
       this.$router.push({name: 'Login'});
     },
     selectQueue(marker) {
-      console.log('Marker: ', JSON.stringify(marker, null, ' '));
       const queue = this.queues.find(
         (queue) =>
           queue.longitude.toString() === marker.position.lng.toString() &&

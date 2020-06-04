@@ -48,6 +48,7 @@ export default {
   methods: {
     highlight() {
       console.log('highlit queue: ', this.queue.id);
+      console.log('Element: ', this.$el);
       this.highlit = true;
       this.isActive = true;
       setTimeout(() => {
