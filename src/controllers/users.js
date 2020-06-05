@@ -16,8 +16,22 @@ exports.getUsers = async () => {
 };
 
 exports.letThrough = async (user, queue) => {
-  await axios.post(configs.SERVER_URL + `/clients/${user.id}/let_through?queue_id=${queue.id}`);
-  return;
+  try {
+    return axios.post(configs.SERVER_URL + `/clients/${user.id}/let_through?queue_id=${queue.id}`);
+  } catch(err) {
+    console.error('ERROR :: letting through. ', err);
+    throw new Error(err);
+  }
+}
+
+exports.leaveQueue = async(user, queue) => {
+  try {
+    return axios.put(configs.SERVER_URL + `/clients/${user.id}/leave_queue?queue_id=${queue.id}`);
+  } catch {
+    console.error('ERROR :: leave Queue. ', err)
+    throw new Error(err);
+  }
+
 }
 
 exports.registerUser = async (user) => {
@@ -32,7 +46,7 @@ exports.registerUser = async (user) => {
     }
     return mapUserProperties(res.data)
   } catch (err) {
-    console.error('ERROR :: Request register user');
+    console.error('ERROR :: Request register user. ', err);
     throw new Error(err);
   }
 };
@@ -41,7 +55,7 @@ exports.getSignedQueues = async (userId) => {
   try {
     return (await axios.get(configs.SERVER_URL + `/clients/${userId}/shop_queues`)).data;
   } catch(err) {
-    console.error('ERROR :: Error getting signed queues');
+    console.error('ERROR :: Error getting signed queues. ', err);
     throw new Error(err);
   }
 }

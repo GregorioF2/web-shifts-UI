@@ -1,6 +1,7 @@
 <template>
   <div class="viewer">
     <div class="center">
+      <notifications></notifications>
       <div class="ui active inverted dimmer" v-if="loading">
         <div class="ui text loader">Loading</div>
       </div>
@@ -20,11 +21,13 @@ import ListQueues from '../components/viewer/ListQueues';
 import ChangeViewButton from '../elements/changeView';
 import {isFalsy} from '../common/utils';
 import {mapState, mapActions} from 'vuex';
+import Notifications from '../elements/NotificationHandler';
 export default {
   components: {
     MapView,
     ListQueues,
-    ChangeViewButton
+    ChangeViewButton,
+    Notifications
   },
   data() {
     return {

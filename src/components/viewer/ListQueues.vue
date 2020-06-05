@@ -21,8 +21,7 @@
           <row-sign-queued
             v-bind:key="id"
             :queue="queue"
-            :ref="`queue-${queue.id}`"
-          >
+            :ref="`queue-${queue.id}`">
           </row-sign-queued>
         </template>
       </sui-accordion>
@@ -42,6 +41,7 @@ export default {
   props: ['queues', 'selected'],
   computed: mapState({
     user: (state) => state.user,
+    signedQueues: (state)  => state.signedQueues,
     signedQueuesIds: (state) => state.signedQueues.map((queue) => queue.id),
     queuesSigned: function(state) {
       return this.queues.filter(queue => this.signedQueuesIds.includes(queue.id))

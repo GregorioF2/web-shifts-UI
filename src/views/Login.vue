@@ -37,7 +37,7 @@ export default {
       try {
         this.updateLoading({loading: true});
         await this.registerUser(this.user);
-        const redirect = this.user.type === OWNER_USER_TYPE ? 'Owner' : 'Viewer';
+        const redirect = this.user.type === CLIENT_USER_TYPE ? 'Viewer' : 'Owner';
         this.$router.push({name: redirect});
       } catch (err) {
         this.pushNotification({

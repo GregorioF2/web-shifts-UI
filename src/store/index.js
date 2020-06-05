@@ -13,7 +13,8 @@ import {
   UPDATE_LOADING,
   PUSH_NOTIFICATION,
   DELETE_NOTIFICATION,
-  UPDATE_SIGNED_QUEUES
+  UPDATE_SIGNED_QUEUES,
+  REMOVE_SIGNED_QUEUE
 } from './mutations-types';
 import {OWNER_USER_TYPE, CLIENT_USER_TYPE} from '../configs';
 
@@ -89,6 +90,13 @@ export default new Vuex.Store({
       state.notifications = notificationsClone
         .slice(0, index)
         .concat(notificationsClone.slice(index + 1, notificationsClone.length));
+    },
+    [REMOVE_SIGNED_QUEUE]: (state, payload) => {
+      const indexQueue = state.signedQueues.findIndex((queue) => queue.id === payload.queue.id);
+      const signedClone = state.signedQueues.slice();
+      state.signedQueues = signedClone
+        .slice(0, indexQueue)
+        .concat(signedClone.slice(indexQueue + 1, signedClone.length));
     }
   },
   actions: {
@@ -181,10 +189,18 @@ export default new Vuex.Store({
     },
     getSignedQueuesOfClient: async ({commit}, userId) => {
       const queues = await usersController.getSignedQueues(userId);
-      console.log('Queues: ', queues);
       commit({
         type: UPDATE_SIGNED_QUEUES,
         queues: queues
+      });
+    },
+    userLeaveQueue: async ({commit}, payload) => {
+      const user = payload.user;
+      const queue = payload.queue;
+      await usersController.leaveQueue(user, queue);
+      commit({
+        type: REMOVE_SIGNED_QUEUE,
+        queue: queue
       });
     }
   },

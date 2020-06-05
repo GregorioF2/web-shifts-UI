@@ -17,7 +17,7 @@
           <form-display :name="'posicion:'" :value="position"></form-display>
           <form-display-buttons
             @clickGreenButton="letThrough"
-            @clickRedButton="removeQueueOfUser"
+            @clickRedButton="leaveQueue"
             :name-green-button="'Dejar pasar'"
             :name-red-button="'Salirme'"
           ></form-display-buttons>
@@ -44,13 +44,18 @@ export default {
       isActive: false
     };
   },
-  computed: mapState({
-    user: (state) => state.user,
-    position: function(state) {
-      const signedQueue = state.signedQueues.find((queue) => this.queue.id);
-      return signedQueue.position;
+  computed: {
+    ...mapState({
+      user: (state) => state.user,
+      signedQueues: (state) => state.signedQueues
+    }),
+    position: function() {
+      const signedQueue = this.signedQueues.find((queue) => queue.id === this.queue.id);
+      console.log('SignedQueue: ', JSON.stringify(signedQueue, null, ' '));
+
+      return signedQueue.position != 0 ? signedQueue.position : 'Tu turno';
     }
-  }),
+  },
   methods: {
     highlight() {
       console.log('highlit queue: ', this.queue.id);
@@ -64,6 +69,15 @@ export default {
       this.isActive = !this.isActive;
     },
     async letThrough() {
+      if (this.position == 0) {
+        this.pushNotification({
+          type: 'negative',
+          title: 'Error al dejar pasar',
+          message: 'Estas siendo atendido, no podes dejar pasar'
+        });
+        return;
+      }
+
       try {
         this.updateLoading({loading: true});
         await this.clientLetThroughInQueue({user: this.user, queue: this.queue});
@@ -78,13 +92,24 @@ export default {
         this.updateLoading({loading: false});
       }
     },
-    async removeQueueOfUser() {
-      await this.removeQueue(this.queue);
+    async leaveQueue() {
+      try {
+        this.updateLoading({loading: true});
+        await this.userLeaveQueue({queue: this.queue, user: this.user});
+      } catch (err) {
+        this.pushNotification({
+          type: 'negative',
+          title: 'Error al dejar la cola',
+          message: err
+        });
+      } finally {
+        this.updateLoading({loading: false});
+      }
     },
     ...mapMutations({
       updateLoading: UPDATE_LOADING
     }),
-    ...mapActions(['removeQueue', 'clientLetThroughInQueue', 'getQueues', 'pushNotification'])
+    ...mapActions(['userLeaveQueue', 'clientLetThroughInQueue', 'getQueues', 'pushNotification'])
   }
 };
 </script>
