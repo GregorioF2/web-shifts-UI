@@ -10,6 +10,7 @@
       <div class="map-container">
         <map-view :markers="markers" @clickMarker="selectQueue"></map-view>
       </div>
+      <scan-qr></scan-qr>
       <list-queues :queues="queues" :selected="selected"></list-queues>
     </div>
   </div>
@@ -22,12 +23,14 @@ import ChangeViewButton from '../elements/changeView';
 import {isFalsy} from '../common/utils';
 import {mapState, mapActions} from 'vuex';
 import Notifications from '../elements/NotificationHandler';
+import ScanQr from '../components/viewer/ScanQr';
 export default {
   components: {
     MapView,
     ListQueues,
     ChangeViewButton,
-    Notifications
+    Notifications,
+    ScanQr
   },
   data() {
     return {

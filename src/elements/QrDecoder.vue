@@ -19,6 +19,7 @@ export default {
   methods: {
     onDecode (result) {
       this.result = result
+      this.$emit('decodeValue', result);
     },
 
     async onInit (promise) {
