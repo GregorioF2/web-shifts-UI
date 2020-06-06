@@ -6,7 +6,7 @@
       -
       <h2 class="name-h2">{{ queue.name }}</h2>
     </sui-accordion-title>
-    <sui-accordion-content class="accordion-content" v-bind:class="{active: isActive}">
+    <sui-accordion-content @click="setCenter()" class="accordion-content" v-bind:class="{active: isActive}">
       <template v-if="isActive">
         <div class="queue-summay">
           <form-display :name="'Name:'" :value="queue.name"></form-display>
@@ -47,8 +47,6 @@ export default {
   }),
   methods: {
     highlight() {
-      console.log('highlit queue: ', this.queue.id);
-      console.log('Element: ', this.$el);
       this.highlit = true;
       this.isActive = true;
       setTimeout(() => {
@@ -56,6 +54,9 @@ export default {
       }, 300);
     },
     clickOnAccordion() {
+      if (!this.isActive) {
+        this.setCenter();
+      }
       this.isActive = !this.isActive;
     },
     async signIn() {
@@ -66,18 +67,19 @@ export default {
         this.pushNotification({
           type: 'negative',
           title: 'Error anotandose a cola',
-          message: 'err'
+          message: err
         });
+      } finally {
+        this.updateLoading({loading: false});
       }
-      this.updateLoading({loading: false});
     },
-    async removeQueueOfUser() {
-      await this.removeQueue(this.queue);
+    setCenter() {
+      this.changeMapCenter({lat: this.queue.latitude, lng: this.queue.longitude})
     },
     ...mapMutations({
       updateLoading: UPDATE_LOADING
     }),
-    ...mapActions(['removeQueue', 'signIntoQueue', 'pushNotification'])
+    ...mapActions(['removeQueue', 'signIntoQueue', 'getQueues', 'pushNotification', 'changeMapCenter'])
   }
 };
 </script>

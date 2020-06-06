@@ -14,7 +14,8 @@ import {
   PUSH_NOTIFICATION,
   DELETE_NOTIFICATION,
   UPDATE_SIGNED_QUEUES,
-  REMOVE_SIGNED_QUEUE
+  REMOVE_SIGNED_QUEUE,
+  CHANGE_MAP_CENTER
 } from './mutations-types';
 import {OWNER_USER_TYPE, CLIENT_USER_TYPE} from '../configs';
 
@@ -34,7 +35,8 @@ export default new Vuex.Store({
     users: [],
     name: '',
     loading: false,
-    notifications: []
+    notifications: [],
+    mapCenter: {lat: -34.559282, lng: -58.458943}
   },
   getters: {
     propietarios: (state) => state.users.filter((user) => user.type === OWNER_USER_TYPE)
@@ -97,6 +99,9 @@ export default new Vuex.Store({
       state.signedQueues = signedClone
         .slice(0, indexQueue)
         .concat(signedClone.slice(indexQueue + 1, signedClone.length));
+    },
+    [CHANGE_MAP_CENTER]: (state, payload) => {
+      state.mapCenter = payload.center;
     }
   },
   actions: {
@@ -198,10 +203,12 @@ export default new Vuex.Store({
       const user = payload.user;
       const queue = payload.queue;
       await usersController.leaveQueue(user, queue);
+    },
+    changeMapCenter: async ({commit}, center) => {
       commit({
-        type: REMOVE_SIGNED_QUEUE,
-        queue: queue
-      });
+        type: CHANGE_MAP_CENTER,
+        center: center
+      })
     }
   },
   modules: {}

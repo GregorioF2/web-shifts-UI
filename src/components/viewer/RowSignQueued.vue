@@ -6,7 +6,7 @@
       -
       <h2 class="name-h2">{{ queue.name }}</h2>
     </sui-accordion-title>
-    <sui-accordion-content class="accordion-content" v-bind:class="{active: isActive}">
+    <sui-accordion-content @click="setCenter()" class="accordion-content" v-bind:class="{active: isActive}">
       <template v-if="isActive">
         <div class="queue-summay">
           <form-display :name="'Name:'" :value="queue.name"></form-display>
@@ -66,6 +66,9 @@ export default {
       }, 300);
     },
     clickOnAccordion() {
+      if (!this.isActive) {
+        this.setCenter();
+      }
       this.isActive = !this.isActive;
     },
     async letThrough() {
@@ -74,6 +77,14 @@ export default {
           type: 'negative',
           title: 'Error al dejar pasar',
           message: 'Estas siendo atendido, no podes dejar pasar'
+        });
+        return;
+      }
+      if (this.position == this.queue.entriesAmount) {
+        this.pushNotification({
+          type: 'negative',
+          title: 'Error al dejar pasar',
+          message: 'Siendo el último, no podes dejar pasar'
         });
         return;
       }
@@ -96,6 +107,8 @@ export default {
       try {
         this.updateLoading({loading: true});
         await this.userLeaveQueue({queue: this.queue, user: this.user});
+        await this.getQueues();
+        await this.getSignedQueuesOfClient(this.user.id);
       } catch (err) {
         this.pushNotification({
           type: 'negative',
@@ -106,10 +119,20 @@ export default {
         this.updateLoading({loading: false});
       }
     },
+    setCenter() {
+      this.changeMapCenter({lat: this.queue.latitude, lng: this.queue.longitude});
+    },
     ...mapMutations({
       updateLoading: UPDATE_LOADING
     }),
-    ...mapActions(['userLeaveQueue', 'clientLetThroughInQueue', 'getQueues', 'pushNotification'])
+    ...mapActions([
+      'userLeaveQueue',
+      'clientLetThroughInQueue',
+      'getQueues',
+      'changeMapCenter',
+      'getSignedQueuesOfClient',
+      'pushNotification'
+    ])
   }
 };
 </script>

@@ -6,9 +6,8 @@
         <div class="ui text loader">Loading</div>
       </div>
       <change-view-button @buttonClick="logout" :text="'Logout'"></change-view-button>
-      <change-view-button @buttonClick="goToOwner" :text="'Ir a Dueño'"></change-view-button>
       <div class="map-container">
-        <map-view :markers="markers" @clickMarker="selectQueue"></map-view>
+        <map-view :markers="markers" :center="mapCenter" @clickMarker="selectQueue"></map-view>
       </div>
       <scan-qr></scan-qr>
       <list-queues :queues="queues" :selected="selected"></list-queues>
@@ -41,6 +40,7 @@ export default {
     user: (state) => state.user,
     loading: (state) => state.loading,
     queues: (state) => state.queues,
+    mapCenter: (state) => state.mapCenter,
     markers: (state) =>
       state.queues.map((queue) => {
         return {position: {lng: parseFloat(queue.longitude), lat: parseFloat(queue.latitude)}};

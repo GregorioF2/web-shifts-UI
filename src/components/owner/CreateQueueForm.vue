@@ -28,7 +28,7 @@
 
     <p class="expand-map" @click="toggleMap()">{{ `Ver mapa [${showMap ? '-' : '+'}]` }}</p>
     <div class="map-container" v-if="showMap">
-      <map-view :markers="markers" @clickOnMap="setLongLat"></map-view>
+      <map-view :markers="markers" :center="mapCenter" @clickOnMap="setLongLat"></map-view>
     </div>
   </div>
 </template>
@@ -55,6 +55,7 @@ export default {
   computed: mapState({
     queues: (state) => state.createdQueues,
     user: (state) => state.user,
+    mapCenter: (state) => state.mapCenter,
     markers: function() {
       if (this.newQueue.longitude && this.newQueue.latitude) {
         return [{position: {lng: this.newQueue.longitude, lat: this.newQueue.latitude}}];

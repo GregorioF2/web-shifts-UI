@@ -2,7 +2,7 @@
   <div class="map-main">
     <GmapMap
       ref="mapRef"
-      :center="{lat: -34.559282, lng: -58.458943}"
+      :center="center"
       :zoom="14"
       map-type-id="terrain"
       style="width: 100%; height: 100%;"
@@ -22,6 +22,7 @@
 <script>
 import * as VueGoogleMaps from 'vue2-google-maps';
 import Vue from 'vue';
+import {mapState} from 'vuex';
 
 export default {
   components: {
@@ -29,7 +30,17 @@ export default {
   },
   props: ['markers'],
   data() {
-    return {};
+    return {
+      map: null
+    };
+  },
+  computed: mapState({
+    center: (state) => state.mapCenter
+  }),
+  watch: {
+    center: function(newVal) {
+      this.map.setCenter(newVal);
+    }
   },
   methods: {
     clickMarker(marker) {
@@ -37,8 +48,8 @@ export default {
     }
   },
   async mounted() {
-    const map = await this.$refs.mapRef.$mapPromise;
-    google.maps.event.addListener(map, 'click', (event) => {
+    this.map = await this.$refs.mapRef.$mapPromise;
+    google.maps.event.addListener(this.map, 'click', (event) => {
       const lng = event.latLng.lng();
       const lat = event.latLng.lat();
       this.$emit('clickOnMap', lng, lat);

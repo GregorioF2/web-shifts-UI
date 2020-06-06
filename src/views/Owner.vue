@@ -6,7 +6,6 @@
         <div class="ui text loader">Loading</div>
       </div>
       <change-view-button @buttonClick="logout" :text="'Logout'"></change-view-button>
-      <change-view-button @buttonClick="goToClient" :text="'Ir a Cliente'"></change-view-button>
       <create-queue-section></create-queue-section>
       <sui-divider />
       <list-queues-section></list-queues-section>
