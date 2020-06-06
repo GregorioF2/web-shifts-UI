@@ -14,7 +14,7 @@
             :name="'Cantidad:'"
             :value="`${queue.entriesAmount}/${queue.capacity}`"
           ></form-display>
-          <form-display :name="'posicion:'" :value="position"></form-display>
+          <form-display :name="'Posicion:'" :value="position"></form-display>
           <form-display-buttons
             @clickGreenButton="letThrough"
             @clickRedButton="leaveQueue"

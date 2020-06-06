@@ -8,7 +8,7 @@
     </sui-accordion-title>
     <sui-accordion-content class="accordion-content" v-bind:class="{active: isActive}">
       <template v-if="isActive">
-        <sui-image class="qr-image" src="https://via.placeholder.com/300" size="small" />
+        <qr-generator :value='JSON.stringify({queueId: queue.id})' :size='150'></qr-generator>
         <div class="queue-summay">
           <form-display
             class="info-queue-display"
@@ -41,13 +41,15 @@
 <script>
 import FormDisplay from '../../elements/FormDisplayKV';
 import FormDisplayButtons from '../../elements/FormDisplayButtons';
+import QrGenerator from '../../elements/QrGenerator';
 import {mapActions, mapState, mapMutations} from 'vuex';
 import {UPDATE_LOADING} from '../../store/mutations-types';
 export default {
   props: ['queue'],
   components: {
     FormDisplay,
-    FormDisplayButtons
+    FormDisplayButtons,
+    QrGenerator
   },
   data() {
     return {

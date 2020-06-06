@@ -1,43 +1,73 @@
 <template>
   <div class="qr-main">
-    <button
-      class="ui secondary button qr-button"
-      @click="toogleScanner"
-    >
-      {{qrAction}} QR Scanner
+    <button class="ui secondary button qr-button" @click="toogleScanner">
+      {{ qrAction }} QR Scanner
     </button>
-    <qr-decoder
-      class='qr-scanner' 
-      @decodeValue='valueDecoded'
-      v-if='scanner'>
-    </qr-decoder>
+    <qr-decoder class="qr-scanner" @decodeValue="valueDecoded" v-if="scanner"> </qr-decoder>
   </div>
 </template>
 
 <script>
-  import QrDecoder from '../../elements/QrDecoder';
-  export default {
-    components: {
-      QrDecoder
+import QrDecoder from '../../elements/QrDecoder';
+import {mapState, mapActions, mapMutations} from 'vuex';
+import {isFalsy} from '../../common/utils';
+import {UPDATE_LOADING} from '../../store/mutations-types';
+export default {
+  components: {
+    QrDecoder
+  },
+  data() {
+    return {
+      scanner: false,
+      qrAction: 'Abrir',
+      queueId: null
+    };
+  },
+  computed: mapState({
+    user: (state) => state.user
+  }),
+  methods: {
+    toogleScanner() {
+      console.log('Scanear QR');
+      this.scanner = !this.scanner;
+      this.qrAction = this.qrAction === 'Abrir' ? 'Cerrar' : 'Abrir';
     },
-    data() {
-      return {
-        scanner: false,
-        qrAction: 'Abrir'
-      };
-    },
-    methods: {
-      toogleScanner() {
-        console.log('Scanear QR');
-        this.scanner = !this.scanner;
-        this.qrAction = this.qrAction === 'Abrir' ? 'Cerrar' : 'Abrir';
-      },
-      valueDecoded(result) {
-        console.log('Decoded value: ');
-        console.log('decoded: ', result);
+    async valueDecoded(result) {
+      try {
+        const queueInfo = JSON.parse(result);
+        if (isFalsy(queueInfo) || isFalsy(queueInfo.queueId)) {
+          throw new Error('Qr no valido');
+        }
+        this.queueId = queueInfo.queueId;
+        await this.signIn();
+        this.toogleScanner();
+      } catch (err) {
+        this.pushNotification({
+          type: 'negative',
+          title: 'Error al leer QR',
+          message: 'Qr no valido para esta aplicación'
+        });
       }
-    }
+    },
+    async signIn() {
+      try {
+        this.updateLoading({loading: true});
+        await this.signIntoQueue({user: this.user, queue: {id: this.queueId}});
+      } catch (err) {
+        this.pushNotification({
+          type: 'negative',
+          title: 'Error anotandose a cola ' + this.queueId,
+          message: 'err'
+        });
+      }
+      this.updateLoading({loading: false});
+    },
+    ...mapMutations({
+      updateLoading: UPDATE_LOADING
+    }),
+    ...mapActions(['pushNotification', 'signIntoQueue'])
   }
+};
 </script>
 
 <style scoped>
@@ -57,7 +87,7 @@
   border: double 10px white;
 }
 
-.qr-scanner{
+.qr-scanner {
   margin: auto;
 }
 </style>
