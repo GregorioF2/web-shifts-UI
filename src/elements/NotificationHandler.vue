@@ -9,8 +9,10 @@
           success: notification.type === 'success'
         }"
       >
-        <i class="close icon cross" @click.prevent="removeNotification(notification.id)"></i>
-        <div class="header">{{ notification.title }}</div>
+          <i class="close icon cross" @click.prevent="removeNotification(notification.id)"></i>
+        <div class="header notification-title">
+          <span>{{notification.title}}</span>
+        </div>
         <p v-html="notification.message"></p>
       </div>
     </template>
@@ -39,5 +41,14 @@ export default {
   left: 70px;
   z-index: 99999;
   max-width: 400px;
+  min-width: 240px;
+}
+.notifications i {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+.notification-title {
+  display: flex;
 }
 </style>

@@ -23,6 +23,7 @@ import {isFalsy} from '../common/utils';
 import {mapState, mapActions} from 'vuex';
 import Notifications from '../elements/NotificationHandler';
 import ScanQr from '../components/viewer/ScanQr';
+import {CLIENT_USER_TYPE} from '../configs';
 export default {
   components: {
     MapView,
@@ -61,7 +62,7 @@ export default {
     },
     pollQueues() {
       this.pollTimeout = setTimeout(async () => {
-        if (Object.keys(this.user).length === 0) {
+        if (this.user.type !== CLIENT_USER_TYPE) {
           return;
         }
         await this.getQueues(this.user);

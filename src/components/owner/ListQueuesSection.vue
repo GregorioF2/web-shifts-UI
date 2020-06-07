@@ -14,6 +14,7 @@
 import {mapActions, mapState} from 'vuex';
 import RowQueueOwner from './RowQueueOwner';
 import {isFalsy} from '../../common/utils';
+import {OWNER_USER_TYPE} from '../../configs';
 export default {
   components: {
     RowQueueOwner
@@ -25,7 +26,7 @@ export default {
   methods: {
     pollQueues() {
       this.pollTimeout = setTimeout(async () => {
-        if (Object.keys(this.user).length === 0) {
+        if (this.user.type !== OWNER_USER_TYPE) {
           return;
         }
         try {

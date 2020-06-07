@@ -14,7 +14,7 @@
       </sui-accordion>
     </div>
     <div class="sub-list-section">
-      <h1>Colas anotadas</h1>
+      <h1 class= 'sub-list-title'>Colas anotadas</h1>
       <sui-divider />
       <sui-accordion exclusive class="accordion-container">
         <template v-for="(queue, id) in queuesSigned">
@@ -52,7 +52,6 @@ export default {
   }),
   watch: {
     selected: function(queue) {
-      console.log('selected queue: ', queue.id);
       const key = `queue-${queue.id}`;
       const acordion = this.$refs[key];
       acordion[0].highlight();
