@@ -34,13 +34,11 @@ export default {
     loading: (state) => state.loading
   }),
   methods: {
-    goToClient() {
-     this.$router.push({name: 'Viewer'});
-    },
     logout() {
+      this.resetState();
       this.$router.push({name: 'Login'});
     },
-    ...mapActions(['pushNotification'])
+    ...mapActions(['pushNotification', 'resetState'])
   },
   mounted() {
     if (JSON.stringify(this.user) === '{}') {

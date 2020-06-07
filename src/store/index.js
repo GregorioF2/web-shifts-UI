@@ -15,7 +15,8 @@ import {
   DELETE_NOTIFICATION,
   UPDATE_SIGNED_QUEUES,
   REMOVE_SIGNED_QUEUE,
-  CHANGE_MAP_CENTER
+  CHANGE_MAP_CENTER,
+  RESET_DEFAULT_CONFIG
 } from './mutations-types';
 import {OWNER_USER_TYPE, CLIENT_USER_TYPE} from '../configs';
 
@@ -26,18 +27,20 @@ import {isFalsy} from '../common/utils';
 
 Vue.use(Vuex);
 
+const defaultConfig = {
+  queues: [],
+  signedQueues: [],
+  createdQueues: [],
+  user: {},
+  users: [],
+  name: '',
+  loading: false,
+  notifications: [],
+  mapCenter: {lat: -34.559282, lng: -58.458943}
+};
+
 export default new Vuex.Store({
-  state: {
-    queues: [],
-    signedQueues: [],
-    createdQueues: [],
-    user: {},
-    users: [],
-    name: '',
-    loading: false,
-    notifications: [],
-    mapCenter: {lat: -34.559282, lng: -58.458943}
-  },
+  state: JSON.parse(JSON.stringify(defaultConfig)),
   getters: {
     propietarios: (state) => state.users.filter((user) => user.type === OWNER_USER_TYPE)
   },
@@ -102,6 +105,18 @@ export default new Vuex.Store({
     },
     [CHANGE_MAP_CENTER]: (state, payload) => {
       state.mapCenter = payload.center;
+    },
+    [RESET_DEFAULT_CONFIG]: (state) => {
+      console.log('defaultConfig: ', JSON.stringify(defaultConfig, null, ' '));
+      state.queues = defaultConfig.queues;
+      state.signedQueues = defaultConfig.signedQueues;
+      state.createdQueues = defaultConfig.createdQueues;
+      state.user = defaultConfig.user;
+      state.users = defaultConfig.users;
+      state.name = defaultConfig.name;
+      state.loading = defaultConfig.loading;
+      state.notifications = defaultConfig.notifications;
+      state.mapCenter = defaultConfig.mapCenter;
     }
   },
   actions: {
@@ -150,6 +165,7 @@ export default new Vuex.Store({
       });
     },
     removeQueue: async ({commit}, queue) => {
+      console.log('remove queue: ', JSON.stringify(queue, null, ' '));
       const queues = await queuesController.removeQueue(queue);
       commit({
         type: UPDATE_QUEUES,
@@ -193,6 +209,7 @@ export default new Vuex.Store({
       });
     },
     getSignedQueuesOfClient: async ({commit}, userId) => {
+      console.log('getSignedQueuesOfClient::User Id: ', userId);
       const queues = await usersController.getSignedQueues(userId);
       commit({
         type: UPDATE_SIGNED_QUEUES,
@@ -208,6 +225,11 @@ export default new Vuex.Store({
       commit({
         type: CHANGE_MAP_CENTER,
         center: center
+      })
+    },
+    resetState: async({commit}) => {
+      commit({
+        type: RESET_DEFAULT_CONFIG
       })
     }
   },

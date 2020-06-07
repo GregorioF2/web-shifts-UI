@@ -13,7 +13,7 @@ exports.getQueues = async () => {
 
 exports.serveNext = async (queueId) => {
   return axios.put(configs.SERVER_URL + `/queues/${queueId}/serve_next`);
-}
+};
 
 exports.enqueueClient = async (user, queue) => {
   try {
@@ -26,6 +26,7 @@ exports.enqueueClient = async (user, queue) => {
 
 exports.getCreatedUserQueues = async (user) => {
   try {
+    console.log('getCreatedUserQueues::user: ', JSON.stringify(user, null, ' '));
     const res = await axios.get(configs.SERVER_URL + `/owners/${user.id}`);
     return res.data;
   } catch (err) {
@@ -46,6 +47,7 @@ exports.createQueue = async (user, queue) => {
     const res = await axios.post(configs.SERVER_URL + '/queues', formData);
     return res.data;
   } catch (err) {
+    console.error('Error: creating queue. ', err);
     throw new Error(err);
   }
 };
@@ -53,4 +55,13 @@ exports.createQueue = async (user, queue) => {
 exports.getImage = async () => {
   const res = await axios.get('https://via.placeholder.com/150');
   console.log('res: ');
+};
+
+exports.removeQueue = async (queue) => {
+  try {
+    await axios.put(configs.SERVER_URL + `/queues/${queue.id}/delete`);
+  } catch (err) {
+    console.error('Error: deleting queue. ', err);
+    throw new Error(err);
+  }
 };

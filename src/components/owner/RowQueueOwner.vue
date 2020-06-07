@@ -8,7 +8,7 @@
     </sui-accordion-title>
     <sui-accordion-content class="accordion-content" v-bind:class="{active: isActive}">
       <template v-if="isActive">
-        <qr-generator :value='JSON.stringify({queueId: queue.id})' :size='150'></qr-generator>
+        <qr-generator :value="JSON.stringify({queueId: queue.id})" :size="150"></qr-generator>
         <div class="queue-summay">
           <form-display
             class="info-queue-display"
@@ -86,7 +86,21 @@ export default {
       }
     },
     async removeQueueOfUser() {
-      await this.removeQueue(this.queue);
+        console.log('remove queue of user');
+
+      try {
+        this.updateLoading({loading: true});
+        await this.removeQueue(this.queue);
+        await this.getCreatedUserQueues(this.user);
+      } catch (err) {
+        this.pushNotification({
+          type: 'negative',
+          title: 'No se pudo eliminar cola',
+          message: err
+        });
+      } finally {
+        this.updateLoading({loading: false});
+      }
     },
     ...mapMutations({
       updateLoading: UPDATE_LOADING

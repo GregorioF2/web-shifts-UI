@@ -13,6 +13,7 @@
 <script>
 import {mapActions, mapState} from 'vuex';
 import RowQueueOwner from './RowQueueOwner';
+import {isFalsy} from '../../common/utils';
 export default {
   components: {
     RowQueueOwner
@@ -24,6 +25,9 @@ export default {
   methods: {
     pollQueues() {
       this.pollTimeout = setTimeout(async () => {
+        if (Object.keys(this.user).length === 0) {
+          return;
+        }
         try {
           this.getCreatedUserQueues(this.user);
           this.pollQueues();

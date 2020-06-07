@@ -47,10 +47,8 @@ export default {
       })
   }),
   methods: {
-    goToOwner() {
-      this.$router.push({name: 'Owner'});
-    },
     logout() {
+      this.resetState();
       this.$router.push({name: 'Login'});
     },
     selectQueue(marker) {
@@ -62,13 +60,16 @@ export default {
       this.selected = queue;
     },
     pollQueues() {
-      this.pollTimeout = setTimeout(async() => {
+      this.pollTimeout = setTimeout(async () => {
+        if (Object.keys(this.user).length === 0) {
+          return;
+        }
         await this.getQueues(this.user);
         await this.getSignedQueuesOfClient(this.user.id);
         this.pollQueues();
-      }, 10000);
+      }, 1000);
     },
-    ...mapActions(['getQueues', 'getSignedQueuesOfClient'])
+    ...mapActions(['getQueues', 'getSignedQueuesOfClient', 'resetState'])
   },
   mounted() {
     if (JSON.stringify(this.user) === '{}') {
