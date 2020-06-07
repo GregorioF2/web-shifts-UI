@@ -9,7 +9,7 @@
           success: notification.type === 'success'
         }"
       >
-        <i class="close icon" @click.prevent="removeNotification(notification.id)"></i>
+        <i class="close icon cross" @click.prevent="removeNotification(notification.id)"></i>
         <div class="header">{{ notification.title }}</div>
         <p v-html="notification.message"></p>
       </div>

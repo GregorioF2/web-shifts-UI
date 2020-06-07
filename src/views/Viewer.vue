@@ -67,7 +67,7 @@ export default {
         await this.getQueues(this.user);
         await this.getSignedQueuesOfClient(this.user.id);
         this.pollQueues();
-      }, 1000);
+      }, 10000);
     },
     ...mapActions(['getQueues', 'getSignedQueuesOfClient', 'resetState'])
   },

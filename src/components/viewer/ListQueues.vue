@@ -1,7 +1,7 @@
 <template>
   <div class="list-queue-viewer-main">
     <div class="sub-list-section">
-      <h1>Colas Disponibles</h1>
+      <h1 class= 'sub-list-title'>Colas Disponibles</h1>
       <sui-divider />
       <sui-accordion exclusive class="accordion-container">
         <template v-for="(queue, id) in availableQueues">
@@ -73,9 +73,13 @@ export default {
   width: 1000px;
 }
 .sub-list-section {
+  width: 40%;
   display: flex;
   flex-direction: column;
   margin: auto;
   margin-top: 20px;
+}
+.sub-list-title {
+  margin: auto;
 }
 </style>

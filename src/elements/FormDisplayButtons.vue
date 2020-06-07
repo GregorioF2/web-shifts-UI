@@ -1,6 +1,7 @@
 <template>
   <div class="display-form-section">
     <sui-button
+      class="display-form-button"
       color="green"
       @click.prevent="clickGreenButton()"
       v-bind:content="nameGreenButton"
@@ -8,6 +9,7 @@
     />
     <sui-button
       color="red"
+      class="display-form-button"
       @click.prevent="clickRedButton()"
       v-bind:content="nameRedButton"
       basic
@@ -34,5 +36,8 @@ export default {
   position: relative;
   display: flex;
   justify-content: space-between;
+}
+.display-form-button {
+  width: 40%;
 }
 </style>

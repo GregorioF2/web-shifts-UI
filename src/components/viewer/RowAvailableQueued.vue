@@ -9,7 +9,7 @@
     <sui-accordion-content @click="setCenter()" class="accordion-content" v-bind:class="{active: isActive}">
       <template v-if="isActive">
         <div class="queue-summay">
-          <form-display :name="'Name:'" :value="queue.name"></form-display>
+          <form-display :name="'Nombre:'" :value="queue.name"></form-display>
           <form-display
             :name="'Anotades:'"
             :value="`${queue.entriesAmount}/${queue.capacity}`"

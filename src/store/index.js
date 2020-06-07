@@ -107,16 +107,16 @@ export default new Vuex.Store({
       state.mapCenter = payload.center;
     },
     [RESET_DEFAULT_CONFIG]: (state) => {
-      console.log('defaultConfig: ', JSON.stringify(defaultConfig, null, ' '));
-      state.queues = defaultConfig.queues;
-      state.signedQueues = defaultConfig.signedQueues;
-      state.createdQueues = defaultConfig.createdQueues;
-      state.user = defaultConfig.user;
-      state.users = defaultConfig.users;
-      state.name = defaultConfig.name;
-      state.loading = defaultConfig.loading;
-      state.notifications = defaultConfig.notifications;
-      state.mapCenter = defaultConfig.mapCenter;
+      const defaultConfigCopy = JSON.parse(JSON.stringify(defaultConfig));
+      state.queues = defaultConfigCopy.queues;
+      state.signedQueues = defaultConfigCopy.signedQueues;
+      state.createdQueues = defaultConfigCopy.createdQueues;
+      state.user = defaultConfigCopy.user;
+      state.users = defaultConfigCopy.users;
+      state.name = defaultConfigCopy.name;
+      state.loading = defaultConfigCopy.loading;
+      state.notifications = defaultConfigCopy.notifications;
+      state.mapCenter = defaultConfigCopy.mapCenter;
     }
   },
   actions: {

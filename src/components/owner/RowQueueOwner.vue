@@ -12,7 +12,7 @@
         <div class="queue-summay">
           <form-display
             class="info-queue-display"
-            :name="'Name:'"
+            :name="'Nombre:'"
             :value="queue.name"
           ></form-display>
           <form-display
@@ -68,6 +68,14 @@ export default {
       this.isActive = !this.isActive;
     },
     async goNexUser() {
+      if (this.queue.entriesAmount === 0) {
+        this.pushNotification({
+          type: 'negative',
+          title: 'No se pudo pasar al siguiente',
+          message: 'No hay clientes en la cola'
+        });
+        return;
+      }
       try {
         this.updateLoading({loading: true});
         await this.serveNext({

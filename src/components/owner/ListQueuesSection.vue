@@ -1,6 +1,6 @@
 <template>
   <div class="list-queue-main">
-    <h1>Colas creadas</h1>
+    <h1 class= 'list-title'>Colas creadas</h1>
     <sui-divider />
     <sui-accordion exclusive class="accordion-container">
       <template v-for="(queue, id) in queues">
@@ -61,5 +61,9 @@ export default {
 .accordion-container {
   margin: auto;
   width: 100%;
+}
+
+.list-title {
+  margin: auto;
 }
 </style>

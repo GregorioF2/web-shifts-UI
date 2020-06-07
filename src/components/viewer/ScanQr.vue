@@ -89,5 +89,6 @@ export default {
 
 .qr-scanner {
   margin: auto;
+  width: 50%
 }
 </style>

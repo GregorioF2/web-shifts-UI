@@ -9,12 +9,12 @@
     <sui-accordion-content @click="setCenter()" class="accordion-content" v-bind:class="{active: isActive}">
       <template v-if="isActive">
         <div class="queue-summay">
-          <form-display :name="'Name:'" :value="queue.name"></form-display>
+          <form-display :name="'Nombre:'" :value="queue.name"></form-display>
           <form-display
             :name="'Cantidad:'"
             :value="`${queue.entriesAmount}/${queue.capacity}`"
           ></form-display>
-          <form-display :name="'Posicion:'" :value="position"></form-display>
+          <form-display :name="'Posición:'" :value="position"></form-display>
           <form-display-buttons
             @clickGreenButton="letThrough"
             @clickRedButton="leaveQueue"
@@ -76,7 +76,7 @@ export default {
         this.pushNotification({
           type: 'negative',
           title: 'Error al dejar pasar',
-          message: 'Estas siendo atendido, no podes dejar pasar'
+          message: 'Estas siendo atendido, no podés dejar pasar'
         });
         return;
       }
@@ -84,7 +84,7 @@ export default {
         this.pushNotification({
           type: 'negative',
           title: 'Error al dejar pasar',
-          message: 'Siendo el último, no podes dejar pasar'
+          message: 'Siendo el último, no podés dejar pasar'
         });
         return;
       }
