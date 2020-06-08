@@ -43,6 +43,7 @@ exports.createQueue = async (user, queue) => {
     formData.append('longitude', queue.longitude);
     formData.append('latitude', queue.latitude);
     formData.append('owner_id', user.id);
+    formData.append('description', queue.description);
 
     const res = await axios.post(configs.SERVER_URL + '/queues', formData);
     return res.data;
@@ -59,7 +60,7 @@ exports.getImage = async () => {
 
 exports.removeQueue = async (queue) => {
   try {
-    await axios.put(configs.SERVER_URL + `/queues/${queue.id}/delete`);
+    await axios.delete(configs.SERVER_URL + `/queues/${queue.id}`);
   } catch (err) {
     console.error('Error: deleting queue. ', err);
     throw new Error(err);

@@ -57,6 +57,7 @@ export default {
   margin: auto;
   margin-top: 50px;
   width: 700px;
+  margin-bottom: 100px;
 }
 
 .accordion-container {
