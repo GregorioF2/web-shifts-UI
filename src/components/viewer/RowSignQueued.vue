@@ -14,7 +14,7 @@
             :name="'Cantidad:'"
             :value="`${queue.entriesAmount}/${queue.capacity}`"
           ></form-display>
-          <form-display :name="'Posición:'" :value="position"></form-display>
+          <form-display :name="'Posición:'" :value="displayPosition"></form-display>
           <form-display-text :text="queue.description"> </form-display-text>
           <form-display-buttons
             @clickGreenButton="letThrough"
@@ -54,14 +54,15 @@ export default {
     }),
     position: function() {
       const signedQueue = this.signedQueues.find((queue) => queue.id === this.queue.id);
-      console.log('SignedQueue: ', JSON.stringify(signedQueue, null, ' '));
 
-      return signedQueue.position != 0 ? signedQueue.position : 'Tu turno';
+      return signedQueue.position;
+    },
+    displayPosition: function() {
+      return this.position != 0 ?  this.position : 'Tu turno';
     }
   },
   methods: {
     highlight() {
-      console.log('highlit queue: ', this.queue.id);
       this.highlit = true;
       this.isActive = true;
       setTimeout(() => {

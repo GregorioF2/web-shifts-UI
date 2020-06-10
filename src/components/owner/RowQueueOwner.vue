@@ -46,6 +46,7 @@ import QrGenerator from '../../elements/QrGenerator';
 import {mapActions, mapState, mapMutations} from 'vuex';
 import {UPDATE_LOADING} from '../../store/mutations-types';
 import FormDisplayText from '../../elements/FormDisplayText';
+import {isFalsy}  from '../../common/utils';
 export default {
   props: ['queue'],
   components: {
@@ -71,7 +72,7 @@ export default {
       this.isActive = !this.isActive;
     },
     async goNexUser() {
-      if (this.queue.entriesAmount === 0) {
+      if (this.queue.entriesAmount === 0 && isFalsy(this.queue.actualClientId)) {
         this.pushNotification({
           type: 'negative',
           title: 'No se pudo pasar al siguiente',
