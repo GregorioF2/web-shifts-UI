@@ -15,6 +15,7 @@
             :value="`${queue.entriesAmount}/${queue.capacity}`"
           ></form-display>
           <form-display :name="'Posición:'" :value="position"></form-display>
+          <form-display-text :text="queue.description"> </form-display-text>
           <form-display-buttons
             @clickGreenButton="letThrough"
             @clickRedButton="leaveQueue"
@@ -32,11 +33,13 @@ import FormDisplay from '../../elements/FormDisplayKV';
 import FormDisplayButtons from '../../elements/FormDisplayButtons';
 import {mapActions, mapState, mapMutations} from 'vuex';
 import {UPDATE_LOADING} from '../../store/mutations-types';
+import FormDisplayText from '../../elements/FormDisplayText';
 export default {
   props: ['queue'],
   components: {
     FormDisplay,
-    FormDisplayButtons
+    FormDisplayButtons,
+    FormDisplayText
   },
   data() {
     return {

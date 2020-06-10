@@ -1,6 +1,5 @@
 <template>
   <div class="display-form-section">
-    <h2 class="text-title">{{ title }}:</h2>
     <span class="text-value">{{ text }}</span>
   </div>
 </template>
@@ -21,10 +20,16 @@ export default {
 
 .text-value {
   font-weight: bold;
-  font-size: 20px;
+  font-size: 15px;
+  margin: auto;
+  text-align: center;
+}
+.first-row {
+  display: flex;
 }
 
 .display-form-section {
+  text-align: center;
   margin: 3px;
 }
 </style>

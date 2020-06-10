@@ -25,6 +25,7 @@
             :name="'Cliente actual:'"
             :value="`${currentClient}`"
           ></form-display>
+          <form-display-text :text="queue.description"> </form-display-text>
           <form-display-buttons
             @clickGreenButton="goNexUser"
             @clickRedButton="removeQueueOfUser"
@@ -44,12 +45,14 @@ import FormDisplayButtons from '../../elements/FormDisplayButtons';
 import QrGenerator from '../../elements/QrGenerator';
 import {mapActions, mapState, mapMutations} from 'vuex';
 import {UPDATE_LOADING} from '../../store/mutations-types';
+import FormDisplayText from '../../elements/FormDisplayText';
 export default {
   props: ['queue'],
   components: {
     FormDisplay,
     FormDisplayButtons,
-    QrGenerator
+    QrGenerator,
+    FormDisplayText
   },
   data() {
     return {

@@ -33,6 +33,7 @@
 import {mapActions, mapState} from 'vuex';
 import RowSignQueued from './RowSignQueued';
 import RowAvailableQueue from './RowAvailableQueued';
+import {isFalsy} from '../../common/utils';
 export default {
   components: {
     RowSignQueued,
@@ -52,9 +53,13 @@ export default {
   }),
   watch: {
     selected: function(queue) {
+      if (isFalsy(queue)) {
+        return;
+      }
       const key = `queue-${queue.id}`;
       const acordion = this.$refs[key];
       acordion[0].highlight();
+      this.selected = undefined;
     }
   }
 };

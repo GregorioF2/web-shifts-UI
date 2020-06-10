@@ -10,7 +10,7 @@
         <map-view :markers="markers" :center="mapCenter" @clickMarker="selectQueue"></map-view>
       </div>
       <scan-qr></scan-qr>
-      <list-queues :queues="queues" :selected="selected"></list-queues>
+      <list-queues :queues="queues" :selected.sync="selected"></list-queues>
     </div>
   </div>
 </template>

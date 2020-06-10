@@ -42,6 +42,7 @@ export default {
 }
 h1 {
   display: inline;
+  margin: auto;
 }
 .accordion-container {
   margin: auto;

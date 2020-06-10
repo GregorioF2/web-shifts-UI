@@ -11,6 +11,10 @@
           <input type="number" v-model="newQueue.capacity" placeholder="Maxima cantidad" />
         </sui-form-field>
       </sui-form-fields>
+      <sui-form-field>
+        <label>Descripción</label>
+        <textarea v-model="newQueue.description" class='description-input'></textarea>
+      </sui-form-field>
       <sui-form-fields>
         <sui-form-field width="ten">
           <label>Longitud </label>
@@ -47,7 +51,8 @@ export default {
         name: null,
         capacity: null,
         longitude: null,
-        latitude: null
+        latitude: null,
+        description: null
       },
       showMap: false
     };
@@ -109,6 +114,7 @@ export default {
 <style scoped>
 .submit-button {
   width: 100%;
+  margin-top: 10px;
 }
 .expand-map {
   margin-top: 10px;
@@ -117,5 +123,8 @@ export default {
 }
 .map-container {
   border: 3px solid black;
+}
+.description-input {
+  height: 120px;
 }
 </style>

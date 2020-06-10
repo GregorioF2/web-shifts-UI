@@ -33,6 +33,7 @@ export default {
 
 <style scoped>
 .display-form-section {
+  margin-top: 4px;
   position: relative;
   display: flex;
   justify-content: space-between;

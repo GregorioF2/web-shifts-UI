@@ -6,7 +6,11 @@
       -
       <h2 class="name-h2">{{ queue.name }}</h2>
     </sui-accordion-title>
-    <sui-accordion-content @click="setCenter()" class="accordion-content" v-bind:class="{active: isActive}">
+    <sui-accordion-content
+      @click="setCenter()"
+      class="accordion-content"
+      v-bind:class="{active: isActive}"
+    >
       <template v-if="isActive">
         <div class="queue-summay">
           <form-display :name="'Nombre:'" :value="queue.name"></form-display>
@@ -14,6 +18,8 @@
             :name="'Anotades:'"
             :value="`${queue.entriesAmount}/${queue.capacity}`"
           ></form-display>
+          <form-display-text :text="queue.description"> </form-display-text>
+
           <form-display-button
             @clickButton="signIn"
             :name="'Anotarme'"
@@ -30,11 +36,13 @@ import FormDisplay from '../../elements/FormDisplayKV';
 import FormDisplayButton from '../../elements/FormDisplayButton';
 import {UPDATE_LOADING} from '../../store/mutations-types';
 import {mapActions, mapState, mapMutations} from 'vuex';
+import FormDisplayText from '../../elements/FormDisplayText';
 export default {
   props: ['queue'],
   components: {
     FormDisplay,
-    FormDisplayButton
+    FormDisplayButton,
+    FormDisplayText
   },
   data() {
     return {
@@ -74,12 +82,18 @@ export default {
       }
     },
     setCenter() {
-      this.changeMapCenter({lat: this.queue.latitude, lng: this.queue.longitude})
+      this.changeMapCenter({lat: this.queue.latitude, lng: this.queue.longitude});
     },
     ...mapMutations({
       updateLoading: UPDATE_LOADING
     }),
-    ...mapActions(['removeQueue', 'signIntoQueue', 'getQueues', 'pushNotification', 'changeMapCenter'])
+    ...mapActions([
+      'removeQueue',
+      'signIntoQueue',
+      'getQueues',
+      'pushNotification',
+      'changeMapCenter'
+    ])
   }
 };
 </script>
