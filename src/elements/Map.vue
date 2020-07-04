@@ -1,28 +1,12 @@
 <template>
-  <div class="map-main">
-    <GmapMap
-      ref="mapRef"
-      :center="center"
-      :zoom="14"
-      map-type-id="terrain"
-      style="width: 100%; height: 100%;"
-    >
-      <GmapMarker
-        :key="index"
-        v-for="(m, index) in markers"
-        :position="m.position"
-        :clickable="true"
-        :draggable="false"
-        @click="clickMarker(m)"
-      />
-    </GmapMap>
-  </div>
+  <div class="map-main" id="map-container"></div>
 </template>
 
 <script>
 import * as VueGoogleMaps from 'vue2-google-maps';
 import Vue from 'vue';
 import {mapState} from 'vuex';
+let mapboxgl = require('mapbox-gl/dist/mapbox-gl.js');
 
 export default {
   components: {
@@ -31,7 +15,8 @@ export default {
   props: ['markers'],
   data() {
     return {
-      map: null
+      map: null,
+      createdMarkers: []
     };
   },
   computed: mapState({
@@ -40,6 +25,14 @@ export default {
   watch: {
     center: function(newVal) {
       this.map.setCenter(newVal);
+    },
+    markers: function(newVal) {
+      this.createdMarkers.forEach((marker) => marker.remove());
+      this.createdMarkers = newVal.map((marker) => {
+        return new mapboxgl.Marker()
+          .setLngLat([marker.position.lng, marker.position.lat])
+          .addTo(this.map);
+      });
     }
   },
   methods: {
@@ -48,11 +41,25 @@ export default {
     }
   },
   async mounted() {
-    this.map = await this.$refs.mapRef.$mapPromise;
-    google.maps.event.addListener(this.map, 'click', (event) => {
-      const lng = event.latLng.lng();
-      const lat = event.latLng.lat();
-      this.$emit('clickOnMap', lng, lat);
+    mapboxgl.accessToken =
+      'pk.eyJ1IjoiZ3JlZ29yaW9mIiwiYSI6ImNqcndlaDl1ZzBieXc0YW8za2V1a3J6Z3cifQ.aU-G3eL1QTwDakRsDc63dQ';
+    const map = new mapboxgl.Map({
+      center: [this.center.lng, this.center.lat],
+      zoom: 12,
+      container: 'map-container',
+      style: 'mapbox://styles/mapbox/bright-v9'
+    });
+    this.map = map;
+
+    const geocoder = new MapboxGeocoder({
+      accessToken: mapboxgl.accessToken,
+      mapboxgl: mapboxgl
+    });
+    this.map.addControl(geocoder);
+    this.map.addControl(new mapboxgl.NavigationControl());
+
+    map.on('click', (e) => {
+      this.$emit('clickOnMap', e.lngLat.lng, e.lngLat.lat);
     });
   }
 };
