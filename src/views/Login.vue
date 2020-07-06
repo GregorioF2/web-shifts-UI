@@ -7,7 +7,8 @@
       </div>
       <big-input :placeholder="'Escribe tu nombre'"></big-input>
       <user-type-selection></user-type-selection>
-      <general-button @buttonClick="submitUserInfo" :title="'Registrarme'"></general-button>
+      <general-button @buttonClick="logIn" :title="'Loguearme'"></general-button>
+      <general-button @buttonClick="register" :title="'Registrarme'"></general-button>
     </div>
   </div>
 </template>
@@ -33,7 +34,23 @@ export default {
     loading: (state) => state.loading
   }),
   methods: {
-    async submitUserInfo() {
+    async logIn() {
+      try {
+        this.updateLoading({loading: true});
+        await this.logInUser(this.user);
+        const redirect = this.user.type === CLIENT_USER_TYPE ? 'Viewer' : 'Owner';
+        this.$router.push({name: redirect});
+      } catch (err) {
+        this.pushNotification({
+          type: 'negative',
+          title: 'Error',
+          message: 'Usuario no existe'
+        });
+      } finally {
+        this.updateLoading({loading: false});
+      }
+    },
+    async register() {
       try {
         this.updateLoading({loading: true});
         await this.registerUser(this.user);
@@ -42,8 +59,8 @@ export default {
       } catch (err) {
         this.pushNotification({
           type: 'negative',
-          title: 'Error registrando usuario',
-          message: err
+          title: 'Error',
+          message: 'Usuario ya existe'
         });
       } finally {
         this.updateLoading({loading: false});
@@ -52,7 +69,7 @@ export default {
     ...mapMutations({
       updateLoading: UPDATE_LOADING
     }),
-    ...mapActions(['registerUser', 'pushNotification'])
+    ...mapActions(['registerUser', 'pushNotification', 'logInUser'])
   }
 };
 </script>

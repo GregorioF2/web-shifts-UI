@@ -134,6 +134,13 @@ export default new Vuex.Store({
         user: userRes
       });
     },
+    logInUser: async ({commit}, user) => {
+      const userRes = await usersController.logInUser(user);
+      commit({
+        type: UPDATE_USER,
+        user: userRes
+      });
+    },
     getCreatedUserQueues: async function({commit, dispatch}, user) {
       const queuesIds = (await queuesController.getCreatedUserQueues(user)).owned_queues;
       await dispatch('getQueues');

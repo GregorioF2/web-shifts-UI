@@ -29,8 +29,15 @@ export default {
     markers: function(newVal) {
       this.createdMarkers.forEach((marker) => marker.remove());
       this.createdMarkers = newVal.map((marker) => {
-        return new mapboxgl.Marker()
+        const iconSize = [60, 60]
+        var el = document.createElement('div');
+        el.className = 'marker';
+        el.style.backgroundImage = 'url(/store_2_small.png)';
+        el.style.width = '60px';
+        el.style.height = '60px';
+        return new mapboxgl.Marker(el)
           .setLngLat([marker.position.lng, marker.position.lat])
+          //.setPopup(new mapboxgl.Popup().setHTML("<h1>Hello World!</h1>"))
           .addTo(this.map);
       });
     }

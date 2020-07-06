@@ -1,5 +1,12 @@
 <template>
-  <div v-bind:class="{highlited: highlit}">
+  <div
+    v-bind:class="{
+      highlited: highlit,
+      system_one: queue.source_id === 1,
+      system_two: queue.source_id === 2,
+      system_three: queue.source_id === 3
+    }"
+  >
     <sui-accordion-title @click="clickOnAccordion()" v-bind:class="{active: isActive}">
       <sui-icon name="dropdown" />
       <h2 class="id-h2">{{ queue.id }}</h2>
@@ -128,5 +135,17 @@ h2 {
 
 .highlited {
   border: 3px solid red;
+}
+
+.system_one {
+  border: 2px solid green;
+}
+.system_two {
+  border: 2px solid rgba(45, 50, 157, 0.5);
+  border-top-right-radius: 15px;
+  margin-top: 30px;
+}
+.system_three {
+  border: 2px solid orange;
 }
 </style>
