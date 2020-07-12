@@ -78,11 +78,12 @@ export default {
     },
     ...mapActions(['getQueues', 'getSignedQueuesOfClient', 'resetState'])
   },
-  mounted() {
+  async mounted() {
     if (JSON.stringify(this.user) === '{}') {
       this.$router.push({name: 'Login'});
     }
-    this.getQueues(this.user);
+    await this.getQueues(this.user);
+    await this.getSignedQueuesOfClient(this.user.id);
     this.pollQueues();
   }
 };
