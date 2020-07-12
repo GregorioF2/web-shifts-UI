@@ -33,6 +33,7 @@ export default {
       this.qrAction = this.qrAction === 'Abrir' ? 'Cerrar' : 'Abrir';
     },
     async valueDecoded(result) {
+      console.log('Result: ', result);
       try {
         const queueInfo = JSON.parse(result);
         if (isFalsy(queueInfo) || isFalsy(queueInfo.queueId)) {
@@ -53,7 +54,7 @@ export default {
     async signIn() {
       try {
         this.updateLoading({loading: true});
-        await this.signIntoQueue({user: this.user, queue: {id: this.queueId, source_id: this.sourceId}});
+        await this.signIntoQueue({user: this.user, queue: {id: this.queueId, sourceId: this.sourceId}});
       } catch (err) {
         this.pushNotification({
           type: 'negative',
