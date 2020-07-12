@@ -10,6 +10,7 @@
         <map-view :markers="markers" :center="mapCenter" @clickMarker="selectQueue"></map-view>
       </div>
       <scan-qr></scan-qr>
+      <list-queues-types></list-queues-types>
       <list-queues :queues="queues" :selected.sync="selected"></list-queues>
     </div>
   </div>
@@ -24,13 +25,15 @@ import {mapState, mapActions} from 'vuex';
 import Notifications from '../elements/NotificationHandler';
 import ScanQr from '../components/viewer/ScanQr';
 import {CLIENT_USER_TYPE} from '../configs';
+import ListQueuesTypes from '../components/viewer/ListQueueTypes';
 export default {
   components: {
     MapView,
     ListQueues,
     ChangeViewButton,
     Notifications,
-    ScanQr
+    ScanQr,
+    ListQueuesTypes
   },
   data() {
     return {
@@ -44,7 +47,10 @@ export default {
     mapCenter: (state) => state.mapCenter,
     markers: (state) =>
       state.queues.map((queue) => {
-        return {position: {lng: parseFloat(queue.longitude), lat: parseFloat(queue.latitude)}};
+        return {
+          position: {lng: parseFloat(queue.longitude), lat: parseFloat(queue.latitude)},
+          queue: queue
+        };
       })
   }),
   methods: {

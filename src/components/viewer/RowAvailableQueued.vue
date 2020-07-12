@@ -1,17 +1,21 @@
 <template>
-  <div
-    v-bind:class="{
-      highlited: highlit,
-      system_one: queue.source_id === 1,
-      system_two: queue.source_id === 2,
-      system_three: queue.source_id === 3
-    }"
-  >
-    <sui-accordion-title @click="clickOnAccordion()" v-bind:class="{active: isActive}">
-      <sui-icon name="dropdown" />
+  <div class="available_queue_main">
+    <sui-accordion-title
+      @click="clickOnAccordion()"
+      v-bind:class="{active: isActive, queue_title: true}"
+    >
+      <sui-icon name="dropdown" class="margin-vertical" />
       <h2 class="id-h2">{{ queue.id }}</h2>
-      -
+      <span class="margin-vertical">-</span>
       <h2 class="name-h2">{{ queue.name }}</h2>
+      <div
+        v-bind:class="{
+          'queue-type': true,
+          system_one: queue.sourceId === 1,
+          system_two: queue.sourceId === 2,
+          system_three: queue.sourceId === 3
+        }"
+      ></div>
     </sui-accordion-title>
     <sui-accordion-content
       @click="setCenter()"
@@ -137,15 +141,66 @@ h2 {
   border: 3px solid red;
 }
 
+.mask-bottom.system_one {
+  border-bottom: 2px solid rgba(45, 157, 50, 0.5);
+  border-left: 2px solid rgba(45, 157, 50, 0.5);
+}
+.mask-bottom.system_two {
+  border-bottom: 2px solid rgba(45, 50, 157, 0.5);
+  border-left: 2px solid rgba(45, 50, 157, 0.5);
+}
+.mask-bottom.system_three {
+  border-bottom: 2px solid rgba(157, 50, 45, 0.5);
+  border-left: 2px solid rgba(157, 50, 45, 0.5);
+}
+.mask-bottom {
+  height: 50%;
+  width: 50%;
+  position: absolute;
+  top: 50%;
+}
+
 .system_one {
-  border: 2px solid green;
+  background-color: rgba(45, 157, 50, 0.5);
 }
 .system_two {
-  border: 2px solid rgba(45, 50, 157, 0.5);
-  border-top-right-radius: 15px;
-  margin-top: 30px;
+  background-color: rgba(45, 50, 157, 0.5);
 }
 .system_three {
-  border: 2px solid orange;
+  background-color: rgba(157, 50, 45, 0.5);
+}
+.mask-top {
+  height: 50%;
+  width: 50%;
+  position: absolute;
+  top: 0%;
+  left: 50%;
+}
+.available_queue_main {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  position: relative;
+}
+.queue-type {
+  right: 0%;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 100%;
+  border: 1px solid black;
+}
+.queue_title {
+  display: flex;
+}
+.id-h2 {
+  margin: 0px;
+}
+.name-h2 {
+  margin: 0px;
+}
+
+.margin-vertical {
+  margin-top: auto !important;
+  margin-bottom: auto !important;
 }
 </style>

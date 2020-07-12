@@ -6,7 +6,7 @@ const mapUserProperties = (user) => {
     id: user.id,
     name: user.name,
     type: user.type === 'client' ? configs.CLIENT_USER_TYPE : configs.OWNER_USER_TYPE,
-    shopQueues: user.shop_queues || []
+    shopQueues: user.shopQueues || []
   };
 };
 
@@ -31,7 +31,7 @@ exports.leaveQueue = async (user, queue) => {
   try {
     return axios.put(
       configs.SERVER_URL +
-        `/clients/${user.id}/leave_queue?queue_id=${queue.id}&system_id=${configs.SYSTEM_ID}`
+        `/clients/${user.id}/leave_queue?queue_id=${queue.id}&source_id=${queue.sourceId}&system_id=${configs.SYSTEM_ID}`
     );
   } catch {
     console.error('ERROR :: leave Queue. ', err);

@@ -1,10 +1,18 @@
 <template>
-  <div v-bind:class="{highlited: highlit, rowqueue: true}">
+  <div class="sign_queue_main">
     <sui-accordion-title @click="clickOnAccordion()" v-bind:class="{active: isActive}">
-      <sui-icon name="dropdown" />
+      <sui-icon name="dropdown" class="margin-vertical" />
       <h2 class="id-h2">{{ queue.id }}</h2>
-      -
+      <span class="margin-vertical">-</span>
       <h2 class="name-h2">{{ queue.name }}</h2>
+      <div
+        v-bind:class="{
+          'queue-type': true,
+          system_one: queue.sourceId === 1,
+          system_two: queue.sourceId === 2,
+          system_three: queue.sourceId === 3
+        }"
+      ></div>
     </sui-accordion-title>
     <sui-accordion-content @click="setCenter()" class="accordion-content" v-bind:class="{active: isActive}">
       <template v-if="isActive">
@@ -171,5 +179,49 @@ h2 {
 
 .highlited {
   border: 3px solid red;
+}
+
+.system_one {
+  background-color: rgba(45, 157, 50, 0.5);
+}
+.system_two {
+  background-color: rgba(45, 50, 157, 0.5);
+}
+.system_three {
+  background-color: rgba(157, 50, 45, 0.5);
+}
+.mask-top {
+  height: 50%;
+  width: 50%;
+  position: absolute;
+  top: 0%;
+  left: 50%;
+}
+.sign_queue_main {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  position: relative;
+}
+.queue-type {
+  right: 0%;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 100%;
+  border: 1px solid black;
+}
+.queue_title {
+  display: flex;
+}
+.id-h2 {
+  margin: 0px;
+}
+.name-h2 {
+  margin: 0px;
+}
+
+.margin-vertical {
+  margin-top: auto !important;
+  margin-bottom: auto !important;
 }
 </style>

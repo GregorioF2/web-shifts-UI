@@ -29,10 +29,11 @@ export default {
     markers: function(newVal) {
       this.createdMarkers.forEach((marker) => marker.remove());
       this.createdMarkers = newVal.map((marker) => {
-        const iconSize = [60, 60]
+        const iconSize = [60, 60];
+        const sourceId = marker.queue.sourceId;
         var el = document.createElement('div');
         el.className = 'marker';
-        el.style.backgroundImage = 'url(/store_2_small.png)';
+        el.style.backgroundImage = `url(/store_${sourceId}_small.png)`;
         el.style.width = '60px';
         el.style.height = '60px';
         return new mapboxgl.Marker(el)

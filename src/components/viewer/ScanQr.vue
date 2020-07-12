@@ -39,6 +39,7 @@ export default {
           throw new Error('Qr no valido');
         }
         this.queueId = queueInfo.queueId;
+        this.sourceId = queueInfo.sourceId;
         await this.signIn();
         this.toogleScanner();
       } catch (err) {
@@ -52,7 +53,7 @@ export default {
     async signIn() {
       try {
         this.updateLoading({loading: true});
-        await this.signIntoQueue({user: this.user, queue: {id: this.queueId}});
+        await this.signIntoQueue({user: this.user, queue: {id: this.queueId, source_id: this.sourceId}});
       } catch (err) {
         this.pushNotification({
           type: 'negative',

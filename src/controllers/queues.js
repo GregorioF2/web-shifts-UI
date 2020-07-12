@@ -4,7 +4,6 @@ const configs = require('../configs');
 exports.getQueues = async () => {
   try {
     const res = await axios.get(configs.SERVER_URL + '/queues' + `?system_id=${configs.SYSTEM_ID}`);
-    return res.data.map(queue => {queue.source_id = configs.SYSTEM_ID; return queue;})
     return res.data;
   } catch (err) {
     console.error('ERROR :: error in get queues');
@@ -22,8 +21,8 @@ exports.enqueueClient = async (user, queue) => {
   try {
     await axios.post(
       configs.SERVER_URL +
-        `/queues/${queue.id}?client_id=${user.id}` +
-        `?system_id=${configs.SYSTEM_ID}`
+        `/queues/${queue.id}?client_id=${user.id}&source_id=${queue.sourceId}` +
+        `&system_id=${configs.SYSTEM_ID}`
     );
   } catch (err) {
     console.error('ERROR :: error in enque client');

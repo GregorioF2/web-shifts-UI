@@ -13,7 +13,7 @@
       </sui-form-fields>
       <sui-form-field>
         <label>Descripción</label>
-        <textarea v-model="newQueue.description" class='description-input'></textarea>
+        <textarea v-model="newQueue.description" class="description-input"></textarea>
       </sui-form-field>
       <sui-form-fields>
         <sui-form-field width="ten">
@@ -63,7 +63,12 @@ export default {
     mapCenter: (state) => state.mapCenter,
     markers: function() {
       if (this.newQueue.longitude && this.newQueue.latitude) {
-        return [{position: {lng: this.newQueue.longitude, lat: this.newQueue.latitude}}];
+        return [
+          {
+            position: {lng: this.newQueue.longitude, lat: this.newQueue.latitude},
+            queue: {sourceId: 2}
+          }
+        ];
       }
       return [];
     }

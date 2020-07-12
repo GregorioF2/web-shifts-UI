@@ -1,28 +1,24 @@
 <template>
   <div class="list-queue-viewer-main">
     <div class="sub-list-section">
-      <h1 class= 'sub-list-title'>Colas Disponibles</h1>
+      <h1 class="sub-list-title">Colas Disponibles</h1>
       <sui-divider />
       <sui-accordion exclusive class="accordion-container">
         <template v-for="(queue, id) in availableQueues">
-          <row-available-queue 
-            v-bind:key="id"
-            :queue="queue"
-            :ref="`queue-${queue.id}`">
+          <row-available-queue v-bind:key="id" :queue="queue" :ref="`queue-${queue.id}`">
           </row-available-queue>
+          <sui-divider v-bind:key="id + '-divide'"/>
         </template>
       </sui-accordion>
     </div>
     <div class="sub-list-section">
-      <h1 class= 'sub-list-title'>Colas anotadas</h1>
+      <h1 class="sub-list-title">Colas anotadas</h1>
       <sui-divider />
       <sui-accordion exclusive class="accordion-container">
-        <template v-for="(queue, id) in queuesSigned">
-          <row-sign-queued
-            v-bind:key="id"
-            :queue="queue"
-            :ref="`queue-${queue.id}`">
+        <template v-for="(queue, id) in signedQueues">
+          <row-sign-queued v-bind:key="id" :queue="queue" :ref="`queue-${queue.id}`">
           </row-sign-queued>
+          <sui-divider v-bind:key="id + '-divide'"/>
         </template>
       </sui-accordion>
     </div>
@@ -42,14 +38,15 @@ export default {
   props: ['queues', 'selected'],
   computed: mapState({
     user: (state) => state.user,
-    signedQueues: (state)  => state.signedQueues,
-    signedQueuesIds: (state) => state.signedQueues.map((queue) => queue.id),
-    queuesSigned: function(state) {
-      return this.queues.filter(queue => this.signedQueuesIds.includes(queue.id))
-    },
+    signedQueues: (state) => state.signedQueues,
     availableQueues: function(state) {
-      return this.queues.filter(queue => !this.signedQueuesIds.includes(queue.id))
-    },
+      return this.queues.filter((queue) => {
+        const filteredQueues = this.signedQueues.filter(
+          (queue2) => queue2.sourceId === queue.sourceId && queue.id === queue2.id
+        );
+        return (filteredQueues.length === 0);
+      });
+    }
   }),
   watch: {
     selected: function(queue) {

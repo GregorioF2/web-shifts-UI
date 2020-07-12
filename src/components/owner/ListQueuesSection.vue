@@ -41,10 +41,11 @@ export default {
         }
       }, 5000);
     },
-    ...mapActions(['getCreatedUserQueues', 'pushNotification'])
+    ...mapActions(['getCreatedUserQueues', 'pushNotification', 'refreshUsers'])
   },
   mounted() {
     this.getCreatedUserQueues(this.user);
+    this.refreshUsers();
     this.pollQueues();
   }
 };

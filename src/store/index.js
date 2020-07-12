@@ -18,7 +18,7 @@ import {
   CHANGE_MAP_CENTER,
   RESET_DEFAULT_CONFIG
 } from './mutations-types';
-import {OWNER_USER_TYPE, CLIENT_USER_TYPE} from '../configs';
+import {OWNER_USER_TYPE, CLIENT_USER_TYPE, SYSTEM_ID} from '../configs';
 
 import usersController from '../controllers/users';
 import queuesController from '../controllers/queues';
@@ -76,7 +76,9 @@ export default new Vuex.Store({
         state.createdQueues.push(payload.queue);
       }
       if (!isFalsy(payload.queuesIds)) {
-        state.createdQueues = state.queues.filter((queue) => payload.queuesIds.includes(queue.id));
+        state.createdQueues = state.queues.filter(
+          (queue) => payload.queuesIds.includes(queue.id) && queue.sourceId === SYSTEM_ID
+          );
       }
     },
     [UPDATE_SIGNED_QUEUES]: (state, payload) => {
@@ -142,7 +144,7 @@ export default new Vuex.Store({
       });
     },
     getCreatedUserQueues: async function({commit, dispatch}, user) {
-      const queuesIds = (await queuesController.getCreatedUserQueues(user)).owned_queues;
+      const queuesIds = (await queuesController.getCreatedUserQueues(user)).ownedQueues;
       await dispatch('getQueues');
       commit({
         type: UPDATE_CREATED_QUEUES,
@@ -232,12 +234,12 @@ export default new Vuex.Store({
       commit({
         type: CHANGE_MAP_CENTER,
         center: center
-      })
+      });
     },
-    resetState: async({commit}) => {
+    resetState: async ({commit}) => {
       commit({
         type: RESET_DEFAULT_CONFIG
-      })
+      });
     }
   },
   modules: {}
