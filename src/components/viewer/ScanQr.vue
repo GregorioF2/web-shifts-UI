@@ -39,8 +39,8 @@ export default {
         if (isFalsy(queueInfo) || isFalsy(queueInfo.queueId)) {
           throw new Error('Qr no valido');
         }
-        this.queueId = queueInfo.queueId;
-        this.sourceId = queueInfo.sourceId;
+        this.queueId = queueInfo.concepto_id;
+        this.sourceId = queueInfo.sistema_id;
         await this.signIn();
         this.toogleScanner();
       } catch (err) {

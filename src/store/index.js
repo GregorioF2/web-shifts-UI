@@ -218,7 +218,6 @@ export default new Vuex.Store({
       });
     },
     getSignedQueuesOfClient: async ({commit}, userId) => {
-      console.log('getSignedQueuesOfClient::User Id: ', userId);
       const queues = await usersController.getSignedQueues(userId);
       commit({
         type: UPDATE_SIGNED_QUEUES,
@@ -229,6 +228,9 @@ export default new Vuex.Store({
       const user = payload.user;
       const queue = payload.queue;
       await usersController.leaveQueue(user, queue);
+    },
+    userConfirmTurn: async ({commit}, payload) => {
+      await usersController.confirmTurn(payload.user, payload.queue);
     },
     changeMapCenter: async ({commit}, center) => {
       commit({

@@ -38,7 +38,7 @@ export default {
         el.style.height = '60px';
         return new mapboxgl.Marker(el)
           .setLngLat([marker.position.lng, marker.position.lat])
-          //.setPopup(new mapboxgl.Popup().setHTML("<h1>Hello World!</h1>"))
+          .setPopup(new mapboxgl.Popup().setHTML(`<h2 class="marker-pop-up">${marker.queue.name}</h1>`))
           .addTo(this.map);
       });
     }
@@ -73,11 +73,16 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .map-main {
   display: flex;
   margin: auto;
   height: 400px;
   width: 100%;
+}
+.marker-pop-up {
+  font-family: 'Jazz LET', 'fantasy';
+  padding: 0px;
+  margin: 0px;
 }
 </style>

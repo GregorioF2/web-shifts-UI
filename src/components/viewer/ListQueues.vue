@@ -7,7 +7,7 @@
         <template v-for="(queue, id) in availableQueues">
           <row-available-queue v-bind:key="id" :queue="queue" :ref="`queue-${queue.id}`">
           </row-available-queue>
-          <sui-divider v-bind:key="id + '-divide'"/>
+          <sui-divider v-bind:key="id + '-divide'" />
         </template>
       </sui-accordion>
     </div>
@@ -18,7 +18,7 @@
         <template v-for="(queue, id) in signedQueues">
           <row-sign-queued v-bind:key="id" :queue="queue" :ref="`queue-${queue.id}`">
           </row-sign-queued>
-          <sui-divider v-bind:key="id + '-divide'"/>
+          <sui-divider v-bind:key="id + '-divide'" />
         </template>
       </sui-accordion>
     </div>
@@ -38,13 +38,17 @@ export default {
   props: ['queues', 'selected'],
   computed: mapState({
     user: (state) => state.user,
-    signedQueues: (state) => state.signedQueues,
+    signedQueues: function(state) {
+      return state.signedQueues.map((queue) =>
+        this.queues.find((q) => q.id === queue.id && q.sourceId == queue.sourceId)
+      );
+    },
     availableQueues: function(state) {
       return this.queues.filter((queue) => {
         const filteredQueues = this.signedQueues.filter(
           (queue2) => queue2.sourceId === queue.sourceId && queue.id === queue2.id
         );
-        return (filteredQueues.length === 0);
+        return filteredQueues.length === 0;
       });
     }
   }),

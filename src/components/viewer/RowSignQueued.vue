@@ -1,6 +1,6 @@
 <template>
   <div class="sign_queue_main">
-    <sui-accordion-title @click="clickOnAccordion()" v-bind:class="{active: isActive}">
+    <sui-accordion-title @click="clickOnAccordion()" v-bind:class="{active: isActive, queue_title: true}">
       <sui-icon name="dropdown" class="margin-vertical" />
       <h2 class="id-h2">{{ queue.id }}</h2>
       <span class="margin-vertical">-</span>
@@ -30,6 +30,12 @@
             :name-green-button="'Dejar pasar'"
             :name-red-button="'Salirme'"
           ></form-display-buttons>
+          <form-display-button
+            v-if="queue.sourceId === 1 && this.position === 1 "
+            @clickButton="confirmTurn"
+            :name="'Confirmar'"
+            :color="'black'"
+          ></form-display-button>
         </div>
       </template>
     </sui-accordion-content>
@@ -42,11 +48,13 @@ import FormDisplayButtons from '../../elements/FormDisplayButtons';
 import {mapActions, mapState, mapMutations} from 'vuex';
 import {UPDATE_LOADING} from '../../store/mutations-types';
 import FormDisplayText from '../../elements/FormDisplayText';
+import FormDisplayButton from '../../elements/FormDisplayButton';
 export default {
   props: ['queue'],
   components: {
     FormDisplay,
     FormDisplayButtons,
+    FormDisplayButton,
     FormDisplayText
   },
   data() {
@@ -105,6 +113,7 @@ export default {
         this.updateLoading({loading: true});
         await this.clientLetThroughInQueue({user: this.user, queue: this.queue});
         await this.getQueues();
+        await this.getSignedQueuesOfClient(this.user.id);
       } catch (err) {
         this.pushNotification({
           type: 'negative',
@@ -131,6 +140,22 @@ export default {
         this.updateLoading({loading: false});
       }
     },
+    async confirmTurn() {
+      try {
+        this.updateLoading({loading: true});
+        await this.userConfirmTurn({queue: this.queue, user: this.user});
+        await this.getQueues();
+        await this.getSignedQueuesOfClient(this.user.id);
+      } catch (err) {
+        this.pushNotification({
+          type: 'negative',
+          title: 'Error al dejar la cola',
+          message: err
+        });
+      } finally {
+        this.updateLoading({loading: false});
+      }
+    },
     setCenter() {
       this.changeMapCenter({lat: this.queue.latitude, lng: this.queue.longitude});
     },
@@ -143,7 +168,8 @@ export default {
       'getQueues',
       'changeMapCenter',
       'getSignedQueuesOfClient',
-      'pushNotification'
+      'pushNotification',
+      'userConfirmTurn'
     ])
   }
 };

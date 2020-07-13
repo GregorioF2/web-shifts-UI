@@ -39,6 +39,18 @@ exports.leaveQueue = async (user, queue) => {
   }
 };
 
+exports.confirmTurn = async (user, queue) => {
+  try {
+    return axios.put(
+      configs.SERVER_URL +
+        `/clients/${user.id}/confirm_turn?queue_id=${queue.id}&source_id=${queue.sourceId}&system_id=${configs.SYSTEM_ID}`
+    );
+  } catch {
+    console.error('ERROR :: confirm turn. ', err);
+    throw new Error(err);
+  }
+};
+
 exports.registerUser = async (user) => {
   try {
     const formData = new FormData();
