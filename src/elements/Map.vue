@@ -38,7 +38,7 @@ export default {
         el.style.height = '60px';
         return new mapboxgl.Marker(el)
           .setLngLat([marker.position.lng, marker.position.lat])
-          .setPopup(new mapboxgl.Popup().setHTML(`<h2 class="marker-pop-up">${marker.queue.name}</h1>`))
+          .setPopup(new mapboxgl.Popup().setHTML(`<h2 class="marker-pop-up">${marker.queue.id} - ${marker.queue.name}</h1>`))
           .addTo(this.map);
       });
     }

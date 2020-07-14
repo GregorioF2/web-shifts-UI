@@ -36,7 +36,7 @@ export default {
       console.log('Result: ', result);
       try {
         const queueInfo = JSON.parse(result);
-        if (isFalsy(queueInfo) || isFalsy(queueInfo.queueId)) {
+        if (isFalsy(queueInfo) || isFalsy(queueInfo.concepto_id) || isFalsy(queueInfo.sistema_id)) {
           throw new Error('Qr no valido');
         }
         this.queueId = queueInfo.concepto_id;

@@ -19,6 +19,7 @@
         <div class="queue-summay">
           <form-display :name="'Nombre:'" :value="queue.name"></form-display>
           <form-display
+            v-if='queue.sourceId !== 3'
             :name="'Cantidad:'"
             :value="`${queue.entriesAmount}/${queue.capacity}`"
           ></form-display>

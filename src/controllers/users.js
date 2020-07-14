@@ -19,7 +19,7 @@ exports.letThrough = async (user, queue) => {
   try {
     return axios.post(
       configs.SERVER_URL +
-        `/clients/${user.id}/let_through?queue_id=${queue.id}&system_id=${configs.SYSTEM_ID}`
+        `/clients/${user.id}/let_through?queue_id=${queue.id}&source_id=${queue.sourceId}&system_id=${configs.SYSTEM_ID}`
     );
   } catch (err) {
     console.error('ERROR :: letting through. ', err);
