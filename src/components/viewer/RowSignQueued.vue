@@ -19,9 +19,14 @@
         <div class="queue-summay">
           <form-display :name="'Nombre:'" :value="queue.name"></form-display>
           <form-display
-            v-if='queue.sourceId !== 3'
+            v-if='queue.sourceId === 2'
             :name="'Cantidad:'"
             :value="`${queue.entriesAmount}/${queue.capacity}`"
+          ></form-display>
+          <form-display
+            v-if='queue.sourceId === 1'
+            :name="'Capacidad:'"
+            :value="`${queue.capacity}`"
           ></form-display>
           <form-display :name="'Posición:'" :value="displayPosition"></form-display>
           <form-display-text :text="queue.description"> </form-display-text>

@@ -36,11 +36,11 @@ export default {
       console.log('Result: ', result);
       try {
         const queueInfo = JSON.parse(result);
-        if (isFalsy(queueInfo) || isFalsy(queueInfo.concepto_id) || isFalsy(queueInfo.sistema_id)) {
+        if (isFalsy(queueInfo) || isFalsy(queueInfo.concepto_id || queueInfo.concept_id) || isFalsy(queueInfo.sistema_id || queueInfo.system_id)) {
           throw new Error('Qr no valido');
         }
-        this.queueId = queueInfo.concepto_id;
-        this.sourceId = queueInfo.sistema_id;
+        this.queueId = queueInfo.concepto_id || queueInfo.concept_id;
+        this.sourceId = queueInfo.sistema_id || queueInfo.system_id;
         await this.signIn();
         this.toogleScanner();
       } catch (err) {
